@@ -27,17 +27,17 @@ namespace liberate::string {
 /**
  * Lower- and uppercase strings.
  */
-LIBERATE_PRIVATE
+LIBERATE_API
 std::string to_lower(std::string const & other);
 
-LIBERATE_PRIVATE
+LIBERATE_API
 std::string to_upper(std::string const & other);
 
 
 /**
  * Replace needle in haystack with substitute.
  */
-LIBERATE_PRIVATE
+LIBERATE_API
 std::string replace(std::string const & haystack, std::string const & needle,
     std::string const & substitute, bool first_only = false);
 
@@ -45,7 +45,7 @@ std::string replace(std::string const & haystack, std::string const & needle,
 /**
  * Perform case-insensitive search.
  */
-LIBERATE_PRIVATE
+LIBERATE_API
 ssize_t ifind(std::string const & haystack, std::string const & needle);
 
 
