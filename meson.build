@@ -420,67 +420,19 @@ if not meson.is_subproject()
     ]
   endif
 
-  # We're building two tests:
-  # - public_tests include *only* public headers
-  # - private_tests include private headers
-
-  public_test_src = [
-    #    'test' / 'public' / 'test_registry.cpp',
-    #    'test' / 'public' / 'test_error.cpp',
-    #    'test' / 'public' / 'test_handle.cpp',
-    #    'test' / 'public' / 'test_util_url.cpp',
-    #    'test' / 'public' / 'test_util_tmp.cpp',
-    #    'test' / 'public' / 'test_util_path.cpp',
-    #    'test' / 'public' / 'test_net_network.cpp',
-    #    'test' / 'public' / 'test_net_socket_address.cpp',
-    #    'test' / 'public' / 'test_scheduler_callback.cpp',
-    #    'test' / 'public' / 'test_scheduler.cpp',
-    #    'test' / 'public' / 'test_connector_peer_address.cpp',
-    #    'test' / 'public' / 'test_connector.cpp',
+  test_src = [
+    'test' / 'cpp' / 'hash.cpp',
     'test' / 'runner.cpp',
   ]
 
-  private_test_src = [
-    #    'test' / 'private' / 'test_concurrent_queue.cpp',
-    #    'test' / 'private' / 'test_connector_util.cpp',
-    #    'test' / 'private' / 'test_scheduler_containers.cpp',
-    #    'test' / 'private' / 'test_net_cidr.cpp',
-    #    'test' / 'private' / 'test_util_string.cpp',
-    #    'test' / 'private' / 'test_thread_binder.cpp',
-    #    'test' / 'private' / 'test_thread_tasklet.cpp',
-    #    'test' / 'private' / 'test_io_thread.cpp',
-    'test' / 'runner.cpp',
-  ]
-
-  if host_type == 'win32'
-    private_test_src += [
-      #      'test' / 'private' / 'test_pipe_operations.cpp',
-      #      'test' / 'private' / 'test_io_operations.cpp',
-      #      'test' / 'private' / 'test_socketpair.cpp',
-    ]
-  endif
-
-  public_tests = executable('public_tests', public_test_src,
+  unit_tests = executable('unit_tests', test_src,
       dependencies: [
         liberate_dep,
         gtest.get_variable('gtest_dep'),
       ],
       cpp_args: test_args,
   )
-  test('public_tests', public_tests)
-
-  # Due to symbol visibility, private tests won't link for non-debug builds
-  if bt in ['debug', 'debugoptimized']
-    private_tests = executable('private_tests', private_test_src,
-        include_directories: [libincludes],  # Also private headers
-        dependencies: [
-          liberate_dep,
-          gtest.get_variable('gtest_dep'),
-        ],
-        cpp_args: test_args,
-    )
-    test('private_tests', private_tests)
-  endif
+  test('unit_tests', unit_tests)
 
 endif
 
