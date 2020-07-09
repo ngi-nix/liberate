@@ -300,6 +300,7 @@ includes = include_directories(
   'include',
 )
 
+# FIXME clear this construct if unnecessary
 libincludes = include_directories(
   'lib',
 )
@@ -311,62 +312,26 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'version.h',
-  #  'include' / 'packeteer' / 'error.h',
-  #  'include' / 'packeteer' / 'types.h',
-  #  'include' / 'packeteer' / 'scheduler.h',
-  #  'include' / 'packeteer' / 'scheduler' / 'types.h',
-  #  'include' / 'packeteer' / 'scheduler' / 'callback.h',
-  #  'include' / 'packeteer' / 'scheduler' / 'events.h',
-  #  'include' / 'packeteer' / 'handle.h',
-  #  'include' / 'packeteer' / 'connector.h',
-  #  'include' / 'packeteer' / 'connector' / 'types.h',
-  #  'include' / 'packeteer' / 'connector' / 'interface.h',
-  #  'include' / 'packeteer' / 'connector' / 'peer_address.h',
+  'include' / 'liberate' / 'visibility.h',
 
   subdir: 'liberate',
 )
 
-#install_headers(
-#  'include' / 'packeteer' / 'net' / 'socket_address.h',
-#  'include' / 'packeteer' / 'net' / 'network.h',
-#
-#  subdir: 'packeteer' / 'net',
-#)
-#
-#install_headers(
-#  'include' / 'packeteer' / 'util' / 'operators.h',
-#  'include' / 'packeteer' / 'util' / 'hash.h',
-#  'include' / 'packeteer' / 'util' / 'url.h',
-#  'include' / 'packeteer' / 'util' / 'tmp.h',
-#  'include' / 'packeteer' / 'util' / 'path.h',
-#
-#  subdir: 'packeteer' / 'util',
-#)
+install_headers(
+  'include' / 'liberate' / 'string' / 'util.h',
+
+  subdir: 'packeteer' / 'string',
+)
 
 
 libsrc = [
   'lib' / 'version.cpp',
-  #  'lib' / 'error.cpp',
-  #  'lib' / 'packeteer.cpp',
-  #  'lib' / 'registry.cpp',
-  #  'lib' / 'scheduler.cpp',
-  #  'lib' / 'connector.cpp',
-  #  'lib' / 'connector' / 'peer_address.cpp',
-  #  'lib' / 'scheduler' / 'worker.cpp',
-  #  'lib' / 'scheduler' / 'scheduler_impl.cpp',
-  #  'lib' / 'scheduler' / 'io_thread.cpp',
-  #  'lib' / 'net' / 'socket_address.cpp',
-  #  'lib' / 'net' / 'network.cpp',
-  #  'lib' / 'net' / 'cidr.cpp',
-  #  'lib' / 'thread' / 'tasklet.cpp',
-  #  'lib' / 'util' / 'url.cpp',
-  #  'lib' / 'util' / 'string.cpp',
-  #  'lib' / 'util' / 'tmp.cpp',
-  #  'lib' / 'util' / 'path.cpp',
+  'lib' / 'string' / 'util.cpp',
 ]
 
 
 
+# FIXME clear this construct if unnecessary
 posixsrc = [
 ]
 
@@ -423,6 +388,7 @@ if not meson.is_subproject()
   test_src = [
     'test' / 'cpp' / 'hash.cpp',
     'test' / 'cpp' / 'operators.cpp',
+    'test' / 'string' / 'util.cpp',
     'test' / 'runner.cpp',
   ]
 
