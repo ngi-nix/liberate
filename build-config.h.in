@@ -1,0 +1,84 @@
+#ifndef LIBERATE_CONFIG_H
+#define LIBERATE_CONFIG_H
+
+/*****************************************************************************
+ * Project metadata
+ **/
+// Name
+#mesondefine LIBERATE_PACKAGE_NAME
+
+// Version
+#mesondefine LIBERATE_PACKAGE_MAJOR
+#mesondefine LIBERATE_PACKAGE_MINOR
+#mesondefine LIBERATE_PACKAGE_PATCH
+#mesondefine LIBERATE_PACKAGE_VERSION
+#mesondefine LIBERATE_ABI_VERSION
+#mesondefine LIBERATE_LIB_VERSION
+
+// URL
+#mesondefine LIBERATE_PACKAGE_URL
+
+
+/*****************************************************************************
+ * Options
+ **/
+
+
+/*****************************************************************************
+ * Headers
+ **/
+#mesondefine LIBERATE_HAVE_UNISTD_H
+#mesondefine LIBERATE_HAVE_SYS_SELECT_H
+#mesondefine LIBERATE_HAVE_SYS_TIME_H
+#mesondefine LIBERATE_HAVE_SYS_EPOLL_H
+#mesondefine LIBERATE_HAVE_TIME_H
+#mesondefine LIBERATE_HAVE_POLL_H
+#mesondefine LIBERATE_HAVE_ARPA_INET_H
+#mesondefine LIBERATE_HAVE_NETINET_IN_H
+#mesondefine LIBERATE_HAVE_LINUX_UN_H
+#mesondefine LIBERATE_HAVE_SYS_UN_H
+#mesondefine LIBERATE_HAVE_SYS_SOCKET_H
+#mesondefine LIBERATE_HAVE_WINSOCK2_H
+#mesondefine LIBERATE_HAVE_WS2TCPIP_H
+#mesondefine LIBERATE_HAVE_AFUNIX_H
+
+/*****************************************************************************
+ * Symbols
+ **/
+#mesondefine LIBERATE_HAVE_EPOLL_CREATE1
+#mesondefine LIBERATE_HAVE_SELECT
+#mesondefine LIBERATE_HAVE_PSELECT
+#mesondefine LIBERATE_HAVE_POLL
+#mesondefine LIBERATE_HAVE_PPOLL
+#mesondefine LIBERATE_HAVE_POLLRDHUP
+#mesondefine LIBERATE_HAVE_POLLHUP
+#mesondefine LIBERATE_HAVE_KQUEUE
+#mesondefine LIBERATE_HAVE_IOCP
+
+#mesondefine LIBERATE_HAVE_MKNOD
+#mesondefine LIBERATE_HAVE_MKFIFO
+
+#mesondefine LIBERATE_HAVE_STRERROR_S
+#mesondefine LIBERATE_HAVE_STRERROR_R
+
+#mesondefine LIBERATE_HAVE_SOCKETPAIR
+
+
+/*****************************************************************************
+ * Platform checks
+ **/
+#mesondefine LIBERATE_BIGENDIAN
+
+/*****************************************************************************
+ * User defined build options
+ **/
+#mesondefine LIBERATE_DEFAULT_CONCURRENCY
+#mesondefine LIBERATE_CACHE_LINE_SIZE
+#mesondefine LIBERATE_EVENT_WAIT_INTERVAL_USEC
+#mesondefine LIBERATE_EVENT_MAX
+#mesondefine LIBERATE_IO_BUFFER_SIZE
+#mesondefine LIBERATE_IO_SIGNATURE_SIZE
+#mesondefine LIBERATE_IO_NUM_OVERLAPPED
+#define LIBERATE_IO_OVERLAPPED_GROW_BY @LIBERATE_IO_OVERLAPPED_GROW_BY@
+
+#endif // guard
