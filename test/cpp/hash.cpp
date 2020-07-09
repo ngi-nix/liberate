@@ -39,7 +39,7 @@ TEST(CppHash, multi_hash_is_hash_combine)
   std::size_t seed = 42;
   hash_combine(seed, 123);
 
-  auto result = multi_hash(42, 123);
+  auto result = multi_hash(std::size_t{42}, 123);
   ASSERT_EQ(seed, result);
 }
 
