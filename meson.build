@@ -422,6 +422,7 @@ if not meson.is_subproject()
 
   test_src = [
     'test' / 'cpp' / 'hash.cpp',
+    'test' / 'cpp' / 'operators.cpp',
     'test' / 'runner.cpp',
   ]
 
