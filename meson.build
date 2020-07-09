@@ -77,17 +77,17 @@ if compiler_id == 'clang'
   cpp_args += posix_common_args + [
     '-Wabi',
   ]
-  cpp_lib_is_building = ['-DPACKETEER_IS_BUILDING=1']
+  cpp_lib_is_building = ['-DLIBERATE_IS_BUILDING=1']
 elif compiler_id == 'gcc'
   cpp_args += posix_common_args + [
     '-Wstrict-null-sentinel',
   ]
-  cpp_lib_is_building = ['-DPACKETEER_IS_BUILDING=1']
+  cpp_lib_is_building = ['-DLIBERATE_IS_BUILDING=1']
 elif compiler_id == 'msvc'
   cpp_args += [
     '/wd4250', '/wd4251', '/wd4275',
   ]
-  cpp_lib_is_building = ['/DPACKETEER_IS_BUILDING=1']
+  cpp_lib_is_building = ['/DLIBERATE_IS_BUILDING=1']
 endif
 
 bt = get_option('buildtype')
