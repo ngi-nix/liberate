@@ -252,12 +252,6 @@ includes = include_directories(
   'include',
 )
 
-# FIXME clear this construct if unnecessary
-libincludes = include_directories(
-  'lib',
-)
-
-
 install_headers(
   'include' / 'liberate.h',
 )
@@ -312,8 +306,7 @@ libsrc = [
 
 
 lib = library('erate', libsrc,
-    include_directories: [includes, libincludes],
-    # TODO? dependencies: [thread],
+    include_directories: [includes],
     link_args: link_args,
     cpp_args: cpp_lib_is_building,
     version: LIB_VERSION,
