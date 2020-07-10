@@ -157,48 +157,30 @@ conf_data.set_quoted('LIBERATE_PACKAGE_URL', 'https://gitlab.com/interpeer/liber
 conf_data.set('LIBERATE_BIGENDIAN', host_machine.endian() == 'big')
 
 ### Headers
-if compiler.has_header('unistd.h')
-  conf_data.set('PACKETEER_HAVE_UNISTD_H', true)
-endif
-if compiler.has_header('sys' / 'select.h')
-  conf_data.set('PACKETEER_HAVE_SYS_SELECT_H', true)
-endif
-if compiler.has_header('sys' / 'time.h')
-  conf_data.set('PACKETEER_HAVE_SYS_TIME_H', true)
-endif
-if compiler.has_header('sys' / 'epoll.h')
-  conf_data.set('PACKETEER_HAVE_SYS_EPOLL_H', true)
-endif
-if compiler.has_header('time.h')
-  conf_data.set('PACKETEER_HAVE_TIME_H', true)
-endif
-if compiler.has_header('poll.h')
-  conf_data.set('PACKETEER_HAVE_POLL_H', true)
-endif
 if compiler.has_header('arpa' / 'inet.h')
-  conf_data.set('PACKETEER_HAVE_ARPA_INET_H', true)
+  conf_data.set('LIBERATE_HAVE_ARPA_INET_H', true)
 endif
 if compiler.has_header('netinet' / 'in.h')
-  conf_data.set('PACKETEER_HAVE_NETINET_IN_H', true)
+  conf_data.set('LIBERATE_HAVE_NETINET_IN_H', true)
 endif
 if compiler.has_header('linux' / 'un.h')
-  conf_data.set('PACKETEER_HAVE_LINUX_UN_H', true)
+  conf_data.set('LIBERATE_HAVE_LINUX_UN_H', true)
 endif
 if compiler.has_header('sys' / 'un.h')
-  conf_data.set('PACKETEER_HAVE_SYS_UN_H', true)
+  conf_data.set('LIBERATE_HAVE_SYS_UN_H', true)
 endif
 if compiler.has_header('sys' / 'socket.h')
-  conf_data.set('PACKETEER_HAVE_SYS_SOCKET_H', true)
+  conf_data.set('LIBERATE_HAVE_SYS_SOCKET_H', true)
 endif
 if compiler.has_header('winsock2.h')
-  conf_data.set('PACKETEER_HAVE_WINSOCK2_H', true)
+  conf_data.set('LIBERATE_HAVE_WINSOCK2_H', true)
 endif
 if compiler.has_header('ws2tcpip.h')
-  conf_data.set('PACKETEER_HAVE_WS2TCPIP_H', true)
+  conf_data.set('LIBERATE_HAVE_WS2TCPIP_H', true)
 endif
 have_afunix = false
 if compiler.has_header('afunix.h')
-  conf_data.set('PACKETEER_HAVE_AFUNIX_H', true)
+  conf_data.set('LIBERATE_HAVE_AFUNIX_H', true)
   have_afunix = true
 endif
 
@@ -213,38 +195,6 @@ compiler.sizeof('size_t', prefix: '#include <stdint.h>')
 compiler.sizeof('ssize_t', prefix: '#include <stdint.h>')
 
 
-have_mknod = compiler.compiles('''
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-int main(int, char**)
-{
-  mknod("foo", S_IFIFO, S_IRUSR);
-}
-''', name: 'mknod()')
-if have_mknod
-  conf_data.set('PACKETEER_HAVE_MKNOD', true)
-endif
-
-
-have_mkfifo = compiler.compiles('''
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-int main(int, char**)
-{
-  mkfifo("foo", S_IRUSR);
-}
-''', name: 'mkfifo()')
-if have_mkfifo
-  conf_data.set('PACKETEER_HAVE_MKFIFO', true)
-endif
-
-
 have_strerror_s = compiler.compiles('''
 #include <string.h>
 
@@ -255,7 +205,7 @@ int main(int, char**)
 }
 ''', name: 'strerror_s()')
 if have_strerror_s
-  conf_data.set('PACKETEER_HAVE_STRERROR_S', true)
+  conf_data.set('LIBERATE_HAVE_STRERROR_S', true)
 endif
 
 have_strerror_r = compiler.compiles('''
@@ -272,7 +222,7 @@ int main(int, char**)
 }
 ''', name: 'strerror_r()')
 if have_strerror_s
-  conf_data.set('PACKETEER_HAVE_STRERROR_R', true)
+  conf_data.set('LIBERATE_HAVE_STRERROR_R', true)
 endif
 
 
@@ -284,7 +234,9 @@ endif
 configure_file(
   input: 'build-config.h.in',
   output: 'build-config.h',
-  configuration: conf_data)
+  install_dir: get_option('includedir') / 'liberate',
+  configuration: conf_data
+)
 
 
 
@@ -313,6 +265,7 @@ install_headers(
 install_headers(
   'include' / 'liberate' / 'version.h',
   'include' / 'liberate' / 'visibility.h',
+  'include' / 'liberate' / 'config.h',
 
   subdir: 'liberate',
 )
@@ -322,15 +275,23 @@ install_headers(
   'include' / 'liberate' / 'string' / 'utf8.h',
   'include' / 'liberate' / 'string' / 'urlencode.h',
 
-  subdir: 'packeteer' / 'string',
+  subdir: 'liberate' / 'string',
 )
 
 install_headers(
   'include' / 'liberate' / 'fs' / 'path.h',
   'include' / 'liberate' / 'fs' / 'tmp.h',
 
-  subdir: 'packeteer' / 'fs',
+  subdir: 'liberate' / 'fs',
 )
+
+install_headers(
+  'include' / 'liberate' / 'net' / 'netincludes.h',
+  'include' / 'liberate' / 'net' / 'socket_address.h',
+
+  subdir: 'liberate' / 'net',
+)
+
 
 libsrc = [
   'lib' / 'version.cpp',
@@ -339,6 +300,8 @@ libsrc = [
   'lib' / 'string' / 'urlencode.cpp',
   'lib' / 'fs' / 'path.cpp',
   'lib' / 'fs' / 'tmp.cpp',
+  'lib' / 'net' / 'cidr.cpp',
+  'lib' / 'net' / 'socket_address.cpp',
 ]
 
 
@@ -405,17 +368,25 @@ if not meson.is_subproject()
     'test' / 'string' / 'urlencode.cpp',
     'test' / 'fs' / 'path.cpp',
     'test' / 'fs' / 'tmp.cpp',
+    'test' / 'net' / 'socket_address.cpp',
     'test' / 'runner.cpp',
   ]
 
-  unit_tests = executable('unit_tests', test_src,
+  # Additional tests only if -DDEBUG is given
+  if bt in ['debug', 'debugoptimized']
+    test_src += [
+      'test' / 'net' / 'cidr.cpp',
+    ]
+  endif
+
+  unittests = executable('unittests', test_src,
       dependencies: [
         liberate_dep,
         gtest.get_variable('gtest_dep'),
       ],
-      cpp_args: test_args,
+      cpp_args: test_args + cpp_lib_is_building,
   )
-  test('unit_tests', unit_tests)
+  test('unittests', unittests)
 
 endif
 
