@@ -71,7 +71,7 @@ parse_address(detail::address_data & data, T const & source, size_t size, uint16
   // If parsing got aborted, we either have AF_UNIX or AF_UNSPEC as the
   // actual socket type.
 #if defined(LIBERATE_WIN32)
-  std::string converted = util::to_win32_path(source);
+  std::string converted = fs::to_win32_path(source);
   auto unwrapped = converted.c_str();
 #else // LIBERATE_WIN32
   auto unwrapped = unwrap(source);
@@ -228,7 +228,7 @@ socket_address::full_str() const
         tmp.resize(last + 1);
 
 #if defined(LIBERATE_WIN32)
-        sstream << util::to_posix_path(tmp);
+        sstream << fs::to_posix_path(tmp);
 #else // LIBERATE_WIN32
         sstream << tmp;
 #endif // LIBERATE_WIN32

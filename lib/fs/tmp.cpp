@@ -47,7 +47,7 @@ temp_name(std::string const & prefix /* = "" */)
   ts << std::hex << now.time_since_epoch().count();
 
   // Generate return value
-  std::string ret = to_utf8(tmpdir);
+  std::string ret = string::to_utf8(tmpdir);
   if (prefix.empty()) {
     ret += "liberate";
   }

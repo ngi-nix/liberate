@@ -19,9 +19,11 @@
  **/
 #include <liberate/string/utf8.h>
 
-namespace liberate::string {
+#if defined(LIBERATE_WIN32)
 
-#if defined(PACKETEER_WIN32)
+#include <vector>
+
+namespace liberate::string {
 
 std::string
 to_utf8(TCHAR const * source)
@@ -45,7 +47,6 @@ from_utf8(char const * source)
 }
 
 
-#endif // Win32
-
-
 } // namespace liberate::string
+
+#endif // Win32

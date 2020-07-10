@@ -17,7 +17,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE.
  **/
-#include "string.h"
+#include <liberate/string/util.h>
 
 #include <algorithm>
 #include <locale>
