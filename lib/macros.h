@@ -24,7 +24,7 @@
 #error You are trying to include a C++ only header file
 #endif
 
-#include <liberate/config.h>
+#include <build-config.h>
 
 /**
  * Support for clang/OCLint suppressions

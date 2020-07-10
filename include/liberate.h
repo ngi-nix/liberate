@@ -39,7 +39,6 @@
 #endif
 
 // Visibility macros are used by all, so they must come first.
-#include <liberate/config.h>
 #include <liberate/visibility.h>
 #include <liberate/version.h>
 #include <liberate/types.h>

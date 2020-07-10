@@ -17,7 +17,7 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE.
  **/
-#include <liberate/config.h>
+#include <build-config.h>
 
 #include <liberate/version.h>
 

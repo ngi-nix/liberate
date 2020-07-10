@@ -22,7 +22,7 @@
 #include <liberate/net/network.h>
 
 // For AF_UNSPEC, etc.
-#include <liberate/net/netincludes.h>
+#include "../lib/net/netincludes.h"
 
 #include <gtest/gtest.h>
 

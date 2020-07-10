@@ -24,9 +24,11 @@
 
 // *** Config
 #include <liberate.h>
+#include <build-config.h>
+
 #include <liberate/net/socket_address.h>
 
-#include <liberate/net/netincludes.h>
+#include "netincludes.h"
 
 // *** C++ includes
 #include <string>

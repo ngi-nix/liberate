@@ -18,8 +18,6 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE.
  **/
-#include <liberate/config.h>
-
 #include "cidr.h"
 
 #include <cstdlib>

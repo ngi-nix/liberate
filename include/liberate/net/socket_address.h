@@ -26,7 +26,7 @@
 #include <liberate.h>
 
 #if defined(LIBERATE_IS_BUILDING)
-#include <liberate/net/netincludes.h>
+#include "../../../lib/net/netincludes.h"
 #endif // LIBERATE_IS_BUILDING
 
 // *** C++ includes

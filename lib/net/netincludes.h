@@ -22,7 +22,7 @@
 #ifndef LIBERATE_NETINCLUDES_H
 #define LIBERATE_NETINCLUDES_H
 
-#include <liberate/config.h>
+#include <build-config.h>
 
 #if defined(LIBERATE_HAVE_ARPA_INET_H)
 #include <arpa/inet.h>

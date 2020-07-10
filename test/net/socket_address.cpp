@@ -20,7 +20,9 @@
  **/
 
 #include <liberate/net/socket_address.h>
-#include <liberate/net/netincludes.h>
+
+// For AF_UNSPEC, etc.
+#include "../lib/net/netincludes.h"
 
 #include <gtest/gtest.h>
 

@@ -229,7 +229,6 @@ endif
 configure_file(
   input: 'build-config.h.in',
   output: 'build-config.h',
-  install_dir: get_option('includedir') / 'liberate',
   configuration: conf_data
 )
 
@@ -276,7 +275,6 @@ install_headers(
 )
 
 install_headers(
-  'include' / 'liberate' / 'net' / 'netincludes.h',
   'include' / 'liberate' / 'net' / 'address_type.h',
   'include' / 'liberate' / 'net' / 'socket_address.h',
   'include' / 'liberate' / 'net' / 'network.h',
