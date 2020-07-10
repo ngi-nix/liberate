@@ -63,8 +63,6 @@
 #    undef WIN32_LEAN_AND_MEAN
 #    undef __UNDEF_LEAN_AND_MEAN
 #  endif
-// Link against winsock2 FIXME
-#  pragma comment(lib, "Ws2_32.lib")
 #endif
 
 #endif // guard
