@@ -21,7 +21,11 @@
 
 #include <gtest/gtest.h>
 
+#if defined(LIBERATE_WIN32)
+
 TEST(StringUTF8, placeholder)
 {
   FAIL() << "Not implemented; need win32";
 }
+
+#endif // LIBERATE_WIN32
