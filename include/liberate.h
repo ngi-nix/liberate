@@ -42,6 +42,7 @@
 #include <liberate/config.h>
 #include <liberate/visibility.h>
 #include <liberate/version.h>
+#include <liberate/types.h>
 
 /**
  * Decide what to include globally
