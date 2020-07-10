@@ -20,7 +20,7 @@
 
 #include <liberate/fs/tmp.h>
 
-#include <filesystem>
+#include <stdexcept>
 
 #if defined(LIBERATE_WIN32)
 
@@ -38,8 +38,7 @@ temp_name(std::string const & prefix /* = "" */)
   wchar_t tmpdir[MAX_PATH + 1] = { 0 };
   auto len = GetTempPath(sizeof(tmpdir) / sizeof(wchar_t), tmpdir);
   if (len <= 0) {
-    throw std::filesystem::filesystem_error{"GetTempPath() failed.",
-      std::error_code(GetLastError(), std::generic_category())};
+    throw std::runtime_error{"GetTempPath() failed."};
   }
 
   // Now get the temporary file name
@@ -96,8 +95,7 @@ temp_name(std::string const & prefix /* = "" */)
   // Create temporary file
   int fd = mkstemp(&buf[0]);
   if (fd < 0) {
-    throw std::filesystem::filesystem_error{"mkstemp() failed.",
-      std::error_code(errno, std::generic_category())};
+    throw std::runtime_error{"mkstemp() failed."};
   }
   std::string ret{buf.begin(), buf.end()};
 
