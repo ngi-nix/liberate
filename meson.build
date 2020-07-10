@@ -320,6 +320,7 @@ install_headers(
 install_headers(
   'include' / 'liberate' / 'string' / 'util.h',
   'include' / 'liberate' / 'string' / 'utf8.h',
+  'include' / 'liberate' / 'string' / 'urlencode.h',
 
   subdir: 'packeteer' / 'string',
 )
@@ -329,6 +330,7 @@ libsrc = [
   'lib' / 'version.cpp',
   'lib' / 'string' / 'util.cpp',
   'lib' / 'string' / 'utf8.cpp',
+  'lib' / 'string' / 'urlencode.cpp',
 ]
 
 
@@ -391,7 +393,8 @@ if not meson.is_subproject()
     'test' / 'cpp' / 'hash.cpp',
     'test' / 'cpp' / 'operators.cpp',
     'test' / 'string' / 'util.cpp',
-    # TODO win32 'test' / 'string' / 'utf8.cpp',
+    'test' / 'string' / 'utf8.cpp',
+    'test' / 'string' / 'urlencode.cpp',
     'test' / 'runner.cpp',
   ]
 
