@@ -41,10 +41,10 @@ build_script:
 
 test_script:
 - cmd: |
-    unit_tests "--gtest_output=xml:unit-test-results.xml"
+    unittests "--gtest_output=xml:unittests-results.xml"
 
 on_finish:
 - ps: |
-    If (Test-Path .\unit-test-results.xml) {
-      (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unit-test-results.xml))
+    If (Test-Path .\unittests-results.xml) {
+      (New-Object System.Net.WebClient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unittests-results.xml))
     }

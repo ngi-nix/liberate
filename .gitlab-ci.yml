@@ -108,7 +108,7 @@ build:android-x86_64:
   <<: *dep-linux
   script:
     - cd build
-    - ./unit_tests --gtest_output=xml:unit_tests-log.xml 2>unit_tests-debug.log
+    - ./unittests --gtest_output=xml:unittests-log.xml 2>unittests-debug.log
     - if test "${coverage:=false}" == true ; then ninja coverage && cat meson-logs/coverage.txt ; fi
   artifacts:
     name: lib_test_and_logs
@@ -116,13 +116,13 @@ build:android-x86_64:
     when: always
     paths:
       - build/libliberate.*
-      - build/unit_tests
-      - build/unit_tests-debug.log
-      - build/unit_tests-log.xml
+      - build/unittests
+      - build/unittests-debug.log
+      - build/unittests-log.xml
       - build/meson-logs/coverage*
     reports:
       junit:
-        - build/unit_tests-log.xml
+        - build/unittests-log.xml
 
 test:clang:
   <<: *test-linux
