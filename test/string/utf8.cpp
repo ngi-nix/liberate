@@ -23,9 +23,28 @@
 
 #if defined(LIBERATE_WIN32)
 
-TEST(StringUTF8, placeholder)
+#if defined(LIBERATE_BIGENDIAN)
+#  error Define test_data appropriately
+#else
+TCHAR const test_data[] {
+  TCHAR{'h'},
+  TCHAR{'e'},
+  TCHAR{'l'},
+  TCHAR{'l'},
+  TCHAR{'o'}
+};
+#endif
+
+TEST(StringUTF8, ucs2_to_utf8)
 {
-  FAIL() << "Not implemented; need win32";
+  std::string res = liberate::string::to_utf8(test_data);
+  ASSERT_EQ(res, std::string{"hello"});
+}
+
+TEST(StringUTF8, utf8_to_ucs2)
+{
+  std::wstring res = liberate::string::from_utf8("hello");
+  ASSERT_EQ(res, std::wstring{test_data});
 }
 
 #endif // LIBERATE_WIN32
