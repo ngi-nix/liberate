@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This file is part of packeteer.
+# This file is part of liberate.
 #
 # Author(s): Jens Finkhaeuser <jens@finkhaeuser.de>
 #
