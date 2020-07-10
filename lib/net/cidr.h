@@ -24,7 +24,6 @@
 
 // *** Config
 #include <liberate.h>
-// FIXME #include <liberate/error.h>
 #include <liberate/net/socket_address.h>
 
 #include <liberate/net/netincludes.h>
