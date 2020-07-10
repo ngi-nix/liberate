@@ -226,11 +226,6 @@ if have_strerror_s
 endif
 
 
-### Set values from options
-
-# TODO?
-
-
 configure_file(
   input: 'build-config.h.in',
   output: 'build-config.h',
@@ -424,9 +419,3 @@ if oclint.found()
     depends: oclint_config,
   )
 endif
-
-
-##############################################################################
-# Subdirectories
-# FIXME subdir('examples')
-# FIXME subdir('benchmarks')
