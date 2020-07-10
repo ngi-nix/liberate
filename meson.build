@@ -253,7 +253,6 @@ install_headers(
 install_headers(
   'include' / 'liberate' / 'version.h',
   'include' / 'liberate' / 'visibility.h',
-  'include' / 'liberate' / 'config.h',
   'include' / 'liberate' / 'types.h',
 
   subdir: 'liberate',
