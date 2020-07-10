@@ -1,5 +1,5 @@
 /**
- * This file is part of packeteer.
+ * This file is part of liberate.
  *
  * Author(s): Jens Finkhaeuser <jens@finkhaeuser.de>
  *
@@ -17,8 +17,8 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE.
  **/
-#ifndef PACKETEER_TEST_TEST_NAME_H
-#define PACKETEER_TEST_TEST_NAME_H
+#ifndef LIBERATE_TEST_TEST_NAME_H
+#define LIBERATE_TEST_TEST_NAME_H
 
 #define REPLACE_HELPER(c, replacement) \
   case c: \
