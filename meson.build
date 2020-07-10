@@ -319,6 +319,7 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'string' / 'util.h',
+  'include' / 'liberate' / 'string' / 'utf8.h',
 
   subdir: 'packeteer' / 'string',
 )
@@ -327,6 +328,7 @@ install_headers(
 libsrc = [
   'lib' / 'version.cpp',
   'lib' / 'string' / 'util.cpp',
+  'lib' / 'string' / 'utf8.cpp',
 ]
 
 
@@ -389,6 +391,7 @@ if not meson.is_subproject()
     'test' / 'cpp' / 'hash.cpp',
     'test' / 'cpp' / 'operators.cpp',
     'test' / 'string' / 'util.cpp',
+    # TODO win32 'test' / 'string' / 'utf8.cpp',
     'test' / 'runner.cpp',
   ]
 
