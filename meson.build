@@ -266,6 +266,7 @@ install_headers(
   'include' / 'liberate' / 'version.h',
   'include' / 'liberate' / 'visibility.h',
   'include' / 'liberate' / 'config.h',
+  'include' / 'liberate' / 'types.h',
 
   subdir: 'liberate',
 )
@@ -287,7 +288,9 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'net' / 'netincludes.h',
+  'include' / 'liberate' / 'net' / 'address_type.h',
   'include' / 'liberate' / 'net' / 'socket_address.h',
+  'include' / 'liberate' / 'net' / 'network.h',
 
   subdir: 'liberate' / 'net',
 )
@@ -302,6 +305,7 @@ libsrc = [
   'lib' / 'fs' / 'tmp.cpp',
   'lib' / 'net' / 'cidr.cpp',
   'lib' / 'net' / 'socket_address.cpp',
+  'lib' / 'net' / 'network.cpp',
 ]
 
 
@@ -369,6 +373,7 @@ if not meson.is_subproject()
     'test' / 'fs' / 'path.cpp',
     'test' / 'fs' / 'tmp.cpp',
     'test' / 'net' / 'socket_address.cpp',
+    'test' / 'net' / 'network.cpp',
     'test' / 'runner.cpp',
   ]
 
