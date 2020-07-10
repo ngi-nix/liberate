@@ -327,6 +327,7 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'fs' / 'path.h',
+  'include' / 'liberate' / 'fs' / 'tmp.h',
 
   subdir: 'packeteer' / 'fs',
 )
@@ -337,6 +338,7 @@ libsrc = [
   'lib' / 'string' / 'utf8.cpp',
   'lib' / 'string' / 'urlencode.cpp',
   'lib' / 'fs' / 'path.cpp',
+  'lib' / 'fs' / 'tmp.cpp',
 ]
 
 
@@ -402,6 +404,7 @@ if not meson.is_subproject()
     'test' / 'string' / 'utf8.cpp',
     'test' / 'string' / 'urlencode.cpp',
     'test' / 'fs' / 'path.cpp',
+    'test' / 'fs' / 'tmp.cpp',
     'test' / 'runner.cpp',
   ]
 
