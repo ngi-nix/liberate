@@ -291,6 +291,7 @@ install_headers(
   'include' / 'liberate' / 'net' / 'address_type.h',
   'include' / 'liberate' / 'net' / 'socket_address.h',
   'include' / 'liberate' / 'net' / 'network.h',
+  'include' / 'liberate' / 'net' / 'url.h',
 
   subdir: 'liberate' / 'net',
 )
@@ -306,22 +307,8 @@ libsrc = [
   'lib' / 'net' / 'cidr.cpp',
   'lib' / 'net' / 'socket_address.cpp',
   'lib' / 'net' / 'network.cpp',
+  'lib' / 'net' / 'url.cpp',
 ]
-
-
-
-# FIXME clear this construct if unnecessary
-posixsrc = [
-]
-
-winsrc = [
-]
-
-if host_type == 'posix' or host_type == 'android'
-  libsrc += posixsrc
-elif host_type == 'win32'
-  libsrc += winsrc
-endif
 
 
 lib = library('erate', libsrc,
@@ -374,6 +361,7 @@ if not meson.is_subproject()
     'test' / 'fs' / 'tmp.cpp',
     'test' / 'net' / 'socket_address.cpp',
     'test' / 'net' / 'network.cpp',
+    'test' / 'net' / 'url.cpp',
     'test' / 'runner.cpp',
   ]
 
