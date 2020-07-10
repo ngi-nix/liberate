@@ -116,7 +116,6 @@ socket_address::socket_address(void const * buf, size_t len)
 socket_address::socket_address(std::string const & address,
     uint16_t port /* = 0 */)
 {
-  std::cout << "GOT THIS: " << port << std::endl;
   parse_address(data, address, address.size(), port);
 }
 
