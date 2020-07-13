@@ -83,7 +83,7 @@ error_message(int code)
 
   std::stringstream msg;
   msg << "[0x" << std::hex << code << std::dec << " (" << code << ")] "
-      << ::packeteer::util::to_utf8(errmsg);
+      << ::liberate::string::to_utf8(errmsg);
 
   LocalFree(errmsg);
   return msg.str();
@@ -202,7 +202,7 @@ error_message(int code)
 #if defined(LIBERATE_POSIX)
 #define LIBLOG_ERRNO(message) LIBLOG_ERR(errno, message)
 #else
-#define LIBLOG_ERRNO(message) LIBLOG_ERR(WSAGetLastError(), message)
+#define LIBLOG_ERRNO(message) LIBLOG_ERR(GetLastError(), message)
 #endif
 
 #define LIBLOG_EXC(exc, message) LIBLOG_ERROR(message << " // " << (exc.what()))

@@ -19,16 +19,18 @@ if not meson.is_subproject()
   )
 
   # Plog
-  plog = subproject('plog')
-  example_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_PLOG']
-  executable('log_plog', ['logging' / 'main.cpp'],
-    dependencies: [
-      liberate_dep,
-      plog.get_variable('plog_dep'),
-    ],
-    cpp_args: example_args,
-    link_args: link_args,
-  )
+  if host_type != 'win32'
+    plog = subproject('plog')
+    example_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_PLOG']
+    executable('log_plog', ['logging' / 'main.cpp'],
+      dependencies: [
+        liberate_dep,
+        plog.get_variable('plog_dep'),
+      ],
+      cpp_args: example_args,
+      link_args: link_args,
+    )
+  endif
 
   # Loguru
   if host_type != 'android' and host_type != 'win32'

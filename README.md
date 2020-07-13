@@ -110,4 +110,6 @@ code.
 - `loguru`:
   - In the examples, `FATAL` error messages are redirected to `ERROR`, to
     demonstrate all `LIBLOG*` macros appropriately.
-  - The library cannot be used on Android.
+  - The library cannot be used on Android or Win32.
+- `plog`:
+  - The library cannot be used on Win32.
