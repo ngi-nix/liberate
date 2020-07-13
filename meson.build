@@ -252,13 +252,13 @@ gtest = subproject('gtest')
 log_deps = []
 if log_backend == 'plog'
   plog = subproject('plog')
-  log_deps = [subproject.get_variable('plog_dep')]
+  log_deps = [plog.get_variable('plog_dep')]
 elif log_backend == 'loguru'
   loguru = subproject('loguru')
-  log_deps = [subproject.get_variable('loguru_dep')]
+  log_deps = [loguru.get_variable('emilk_loguru_dep')]
 elif log_backend == 'spdlog'
   spdlog = subproject('spdlog')
-  log_deps = [subproject.get_variable('spdlog_dep')]
+  log_deps = [spdlog.get_variable('spdlog_dep')]
 endif
 
 ##############################################################################
