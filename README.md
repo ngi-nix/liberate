@@ -31,7 +31,17 @@ user in control of where log data is sent.
 
 You choose the logging backend from `meson_options.txt`, or by passing the
 `-DLIBERATE_LOG_BACKEND` compiler flag. Note that depending on how you use the
-macros, either option may be more appropriate for you.
+macros, either option may be more appropriate for you. If all your projects
+are built with meson, in the top-level project do:
+
+```bash
+$ cd <build-dir>
+$ meson <source-dir> -Dliberate:log_backend=plog
+```
+
+Everything should build with the selected backend. Note that depending on the
+backend you choose, you may need to promote the backend's subproject, but meson
+will provide instructions for how to do that.
 
 Possible backends are:
 
