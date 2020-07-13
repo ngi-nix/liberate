@@ -225,6 +225,19 @@ if have_strerror_s
   conf_data.set('LIBERATE_HAVE_STRERROR_R', true)
 endif
 
+### Set values from options
+log_backend = 'LIBERATE_LOG_BACKEND_' + get_option('log_backend').to_upper()
+summary('Log backend', log_backend, section: 'Build options')
+conf_data.set('LIBERATE_LOG_BACKEND', log_backend)
+
+# Also set this choice on the command line, because we need this in the
+# dependency compilation as well.
+dep_flags = []
+if compiler_id == 'clang' or compiler_id == 'gcc'
+  dep_flags = '-DLIBERATE_LOG_BACKEND=' + log_backend
+elif compiler_id == 'msvc'
+  dep_flags = '/DLIBERATE_LOG_BACKEND=' + log_backend
+endif
 
 configure_file(
   input: 'build-config.h.in',
@@ -232,12 +245,21 @@ configure_file(
   configuration: conf_data
 )
 
-
-
 ##############################################################################
-# Dependencies
+# Meson Wrap Dependencies
+gtest = subproject('gtest')
 
-thread = dependency('threads', required: true)
+log_deps = []
+if log_backend == 'plog'
+  plog = subproject('plog')
+  log_deps = [subproject.get_variable('plog_dep')]
+elif log_backend == 'loguru'
+  loguru = subproject('loguru')
+  log_deps = [subproject.get_variable('loguru_dep')]
+elif log_backend == 'spdlog'
+  spdlog = subproject('spdlog')
+  log_deps = [subproject.get_variable('spdlog_dep')]
+endif
 
 ##############################################################################
 # Library
@@ -254,6 +276,7 @@ install_headers(
   'include' / 'liberate' / 'version.h',
   'include' / 'liberate' / 'visibility.h',
   'include' / 'liberate' / 'types.h',
+  'include' / 'liberate' / 'logging.h',
 
   subdir: 'liberate',
 )
@@ -299,6 +322,7 @@ libsrc = [
 
 lib = library('erate', libsrc,
     include_directories: [includes],
+    dependencies: log_deps,
     link_args: link_args,
     cpp_args: cpp_lib_is_building,
     version: LIB_VERSION,
@@ -307,14 +331,13 @@ lib = library('erate', libsrc,
 
 liberate_dep = declare_dependency(
     include_directories: [includes],
+    dependencies: log_deps,
     link_with: [lib],
     link_args: link_args,
     version: LIB_VERSION,
 )
 
-##############################################################################
-# Meson Wrap Dependencies
-gtest = subproject('gtest')
+
 
 ##############################################################################
 # Tests
@@ -368,6 +391,10 @@ if not meson.is_subproject()
 
 endif
 
+
+##############################################################################
+# Examples
+subdir('examples')
 
 ##############################################################################
 # Linter, etc.

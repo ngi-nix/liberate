@@ -47,4 +47,10 @@
  **/
 #mesondefine LIBERATE_BIGENDIAN
 
+/*****************************************************************************
+ * Options
+ **/
+#mesondefine LIBERATE_LOG_BACKEND
+
+
 #endif // guard

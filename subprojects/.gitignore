@@ -1,2 +1,5 @@
 googletest-*/
+loguru-*/
+spdlog-*/
+plog-*/
 packagecache/
