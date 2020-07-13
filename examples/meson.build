@@ -15,6 +15,7 @@ if not meson.is_subproject()
   executable('log_stderr', ['logging' / 'main.cpp'],
     dependencies: [liberate_dep],
     cpp_args: example_args,
+    link_args: link_args,
   )
 
   # Plog
@@ -26,25 +27,35 @@ if not meson.is_subproject()
       plog.get_variable('plog_dep'),
     ],
     cpp_args: example_args,
+    link_args: link_args,
   )
 
   # Loguru
-  loguru = subproject('loguru',
-    default_options: [
-      'loguru_with_streams=true',
-    ],
-  )
-  example_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_LOGURU']
-  executable('log_loguru', ['logging' / 'main.cpp'],
-    dependencies: [
-      liberate_dep,
-      loguru.get_variable('emilk_loguru_dep'),
-    ],
-    cpp_args: example_args,
-  )
+  if host_type != 'android'
+    loguru = subproject('loguru',
+      default_options: [
+        'loguru_with_streams=true',
+      ],
+    )
+    example_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_LOGURU']
+    executable('log_loguru', ['logging' / 'main.cpp'],
+      dependencies: [
+        liberate_dep,
+        loguru.get_variable('emilk_loguru_dep'),
+      ],
+      cpp_args: example_args,
+      link_args: link_args,
+    )
+  endif
 
   # spdlog
-  spdlog = subproject('spdlog')
+  spdlog = subproject('spdlog',
+    default_options: [
+      'enable_examples=false',
+      'enable_benchmarks=false',
+      'enable_tests=false',
+  ])
+
   example_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_SPDLOG']
   executable('log_spdlog', ['logging' / 'main.cpp'],
     dependencies: [
@@ -52,8 +63,7 @@ if not meson.is_subproject()
       spdlog.get_variable('spdlog_dep'),
     ],
     cpp_args: example_args,
+    link_args: link_args,
   )
-
-
 
 endif

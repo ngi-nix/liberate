@@ -106,3 +106,8 @@ Liberate does not initialize other logging backends. It includes the selected
 backend headers, but does nothing else. You can use the logging header to write
 log messages, but where they end up is up to your project's initialization
 code.
+
+- `loguru`:
+  - In the examples, `FATAL` error messages are redirected to `ERROR`, to
+    demonstrate all `LIBLOG*` macros appropriately.
+  - The library cannot be used on Android.

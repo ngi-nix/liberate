@@ -126,7 +126,6 @@ if host_type == 'android'
   # Only posix compilers supported (?)
   cpp_args += [
     '-DANDROID_STL=c++_shared',
-    '-D__ANDROID__',
     '-fexceptions', '-frtti',
   ]
   link_args = [
