@@ -31,7 +31,7 @@ if not meson.is_subproject()
   )
 
   # Loguru
-  if host_type != 'android'
+  if host_type != 'android' and host_type != 'win32'
     loguru = subproject('loguru',
       default_options: [
         'loguru_with_streams=true',
