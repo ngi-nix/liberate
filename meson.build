@@ -230,15 +230,6 @@ log_backend = 'LIBERATE_LOG_BACKEND_' + get_option('log_backend').to_upper()
 summary('Log backend', log_backend, section: 'Build options')
 conf_data.set('LIBERATE_LOG_BACKEND', log_backend)
 
-# Also set this choice on the command line, because we need this in the
-# dependency compilation as well.
-dep_flags = []
-if compiler_id == 'clang' or compiler_id == 'gcc'
-  dep_flags = '-DLIBERATE_LOG_BACKEND=' + log_backend
-elif compiler_id == 'msvc'
-  dep_flags = '/DLIBERATE_LOG_BACKEND=' + log_backend
-endif
-
 configure_file(
   input: 'build-config.h.in',
   output: 'build-config.h',
@@ -249,16 +240,25 @@ configure_file(
 # Meson Wrap Dependencies
 gtest = subproject('gtest')
 
+define = '-D'
+if compiler_id == 'msvc'
+  define = '/D'
+endif
+
 log_deps = []
-if log_backend == 'plog'
+log_cpp_args = []
+if log_backend == 'LIBERATE_LOG_BACKEND_PLOG'
   plog = subproject('plog')
   log_deps = [plog.get_variable('plog_dep')]
-elif log_backend == 'loguru'
+  log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_PLOG']
+elif log_backend == 'LIBERATE_LOG_BACKEND_LOGURU'
   loguru = subproject('loguru')
   log_deps = [loguru.get_variable('emilk_loguru_dep')]
-elif log_backend == 'spdlog'
+  log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_LOGURU']
+elif log_backend == 'LIBERATE_LOG_BACKEND_SPDLOG'
   spdlog = subproject('spdlog')
   log_deps = [spdlog.get_variable('spdlog_dep')]
+  log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_SPDLOG']
 endif
 
 ##############################################################################
@@ -324,7 +324,7 @@ lib = library('erate', libsrc,
     include_directories: [includes],
     dependencies: log_deps,
     link_args: link_args,
-    cpp_args: cpp_lib_is_building,
+    cpp_args: cpp_lib_is_building + log_cpp_args,
     version: LIB_VERSION,
     soversion: ABI_VERSION,
     install: true)
@@ -332,6 +332,7 @@ lib = library('erate', libsrc,
 liberate_dep = declare_dependency(
     include_directories: [includes],
     dependencies: log_deps,
+    compile_args: log_cpp_args,
     link_with: [lib],
     link_args: link_args,
     version: LIB_VERSION,
