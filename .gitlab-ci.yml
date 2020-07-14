@@ -112,7 +112,7 @@ build:android-x86_64:
     - |
       if test "${coverage:=false}" == true ; then
         ninja -vvv coverage
-        find build/meson-logs -type f
+        find . -type f
         cat meson-logs/coverage.txt
       fi
   artifacts:
