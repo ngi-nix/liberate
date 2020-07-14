@@ -118,14 +118,12 @@ build:android-x86_64:
 
 test:clang:
   <<: *test-linux
-  image: debian
   stage: test
   needs:
     - build:clang
 
 test:gcc:
   <<: *test-linux
-  image: debian
   stage: test
   needs:
     - build:gcc
@@ -136,7 +134,6 @@ test:gcc:
 
 test:gcc-i386:
   <<: *test-linux
-  image: debian
   stage: test
   needs:
     - build:gcc-i386
@@ -145,7 +142,6 @@ test:gcc-i386:
 ### distribution
 release:
   <<: *dep-linux
-  image: debian
   stage: release
   script:
     - cd build
