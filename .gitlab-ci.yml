@@ -53,7 +53,7 @@ build:gcc:
   <<: *build-linux
   variables:
     compiler: g++
-    coverage: "true"
+    # FIXME    coverage: "true"
 
 build:gcc-i386:
   <<: *build-linux
@@ -109,18 +109,13 @@ build:android-x86_64:
   script:
     - cd build
     - ./unittests --gtest_output=xml:unittests-log.xml 2>unittests-debug.log
-    - |
-      if test "${coverage:=false}" == true ; then
-        ninja -vvv coverage
-        find . -type f
-        cat meson-logs/coverage.txt
-      fi
+    - if test "${coverage:=false}" == true ; then ninja coverage && cat meson-logs/coverage.txt ; fi
   artifacts:
     name: lib_test_and_logs
     expire_in: 1 week
     when: always
     paths:
-      - build/liberate.*
+      - build/libliberate.*
       - build/unittests
       - build/unittests-debug.log
       - build/unittests-log.xml
@@ -142,9 +137,10 @@ test:gcc:
   stage: test
   needs:
     - build:gcc
-  variables:
-    coverage: "true"
-  coverage: /^TOTAL.*\s+(\d+\%)$/
+  # FIXME
+  # variables:
+  #   coverage: "true"
+  # coverage: /^TOTAL.*\s+(\d+\%)$/
 
 test:gcc-i386:
   <<: *test-linux
