@@ -115,7 +115,7 @@ build:android-x86_64:
     expire_in: 1 week
     when: always
     paths:
-      - build/libliberate.*
+      - build/liberate.*
       - build/unittests
       - build/unittests-debug.log
       - build/unittests-log.xml
