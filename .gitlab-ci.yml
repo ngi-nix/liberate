@@ -111,8 +111,8 @@ build:android-x86_64:
     - ./unittests --gtest_output=xml:unittests-log.xml 2>unittests-debug.log
     - |
       if test "${coverage:=false}" == true ; then
-        ninja coverage
-        find . -type f -name coverage*
+        ninja -vvv coverage
+        find build/meson-logs -type f
         cat meson-logs/coverage.txt
       fi
   artifacts:
@@ -120,12 +120,11 @@ build:android-x86_64:
     expire_in: 1 week
     when: always
     paths:
-      - build/libliberate.*
+      - build/liberate.*
       - build/unittests
       - build/unittests-debug.log
       - build/unittests-log.xml
       - build/meson-logs/coverage*
-      - build/*
     reports:
       junit:
         - build/unittests-log.xml
