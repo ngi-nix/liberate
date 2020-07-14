@@ -109,7 +109,12 @@ build:android-x86_64:
   script:
     - cd build
     - ./unittests --gtest_output=xml:unittests-log.xml 2>unittests-debug.log
-    - if test "${coverage:=false}" == true ; then ninja coverage && cat meson-logs/coverage.txt ; fi
+    - |
+      if test "${coverage:=false}" == true ; then
+        ninja coverage
+        find . -type f -name coverage*
+        cat meson-logs/coverage.txt
+      fi
   artifacts:
     name: lib_test_and_logs
     expire_in: 1 week
@@ -120,6 +125,7 @@ build:android-x86_64:
       - build/unittests-debug.log
       - build/unittests-log.xml
       - build/meson-logs/coverage*
+      - build/*
     reports:
       junit:
         - build/unittests-log.xml
