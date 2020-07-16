@@ -17,8 +17,8 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE.
  **/
-#ifndef LIBERATE_CPP_COMPARISON_H
-#define LIBERATE_CPP_COMPARISON_H
+#ifndef LIBERATE_CPP_OPERATORS_H
+#define LIBERATE_CPP_OPERATORS_H
 
 #ifndef __cplusplus
 #error You are trying to include a C++ only header file

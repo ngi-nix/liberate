@@ -44,7 +44,7 @@ struct foo : public liberate::cpp::comparison_operators<foo>
 
 
 
-TEST(CppOperators, test_equality)
+TEST(CppOperatorsComparison, test_equality)
 {
   foo f1{42};
   foo f2{42};
@@ -54,7 +54,7 @@ TEST(CppOperators, test_equality)
 }
 
 
-TEST(CppOperators, test_inequality)
+TEST(CppOperatorsComparison, test_inequality)
 {
   foo f1{41};
   foo f2{42};
@@ -63,7 +63,7 @@ TEST(CppOperators, test_inequality)
 }
 
 
-TEST(CppOperators, test_less_than)
+TEST(CppOperatorsComparison, test_less_than)
 {
   foo f1{41};
   foo f2{42};
@@ -72,7 +72,7 @@ TEST(CppOperators, test_less_than)
 }
 
 
-TEST(CppOperators, test_less_equal)
+TEST(CppOperatorsComparison, test_less_equal)
 {
   foo f1{41};
   foo f2{42};
@@ -84,7 +84,7 @@ TEST(CppOperators, test_less_equal)
 
 
 
-TEST(CppOperators, test_greater_than)
+TEST(CppOperatorsComparison, test_greater_than)
 {
   foo f1{43};
   foo f2{42};
@@ -93,7 +93,7 @@ TEST(CppOperators, test_greater_than)
 }
 
 
-TEST(CppOperators, test_greater_equal)
+TEST(CppOperatorsComparison, test_greater_equal)
 {
   foo f1{43};
   foo f2{42};

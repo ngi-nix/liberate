@@ -305,6 +305,20 @@ install_headers(
   subdir: 'liberate' / 'net',
 )
 
+install_headers(
+  'include' / 'liberate' / 'cpp' / 'hash.h',
+  'include' / 'liberate' / 'cpp' / 'operators.h',
+
+  subdir: 'liberate' / 'cpp',
+)
+
+install_headers(
+  'include' / 'liberate' / 'cpp' / 'operators' / 'comparison.h',
+
+  subdir: 'liberate' / 'cpp' / 'operators',
+)
+
+
 
 libsrc = [
   'lib' / 'version.cpp',
@@ -362,7 +376,7 @@ if not meson.is_subproject()
 
   test_src = [
     'test' / 'cpp' / 'hash.cpp',
-    'test' / 'cpp' / 'operators.cpp',
+    'test' / 'cpp' / 'operators' / 'comparison.cpp',
     'test' / 'string' / 'util.cpp',
     'test' / 'string' / 'utf8.cpp',
     'test' / 'string' / 'urlencode.cpp',
