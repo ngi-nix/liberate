@@ -21,7 +21,7 @@
 #define LIBERATE_VISIBILITY_H
 
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-  #ifdef LIBERATE_IS_BUILDING
+  #if defined(LIBERATE_IS_BUILDING) && LIBERATE_IS_BUILDING > 0
     #define LIBERATE_API __declspec(dllexport)
   #else
     #define LIBERATE_API __declspec(dllimport)
