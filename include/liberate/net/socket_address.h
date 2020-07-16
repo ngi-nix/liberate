@@ -25,7 +25,7 @@
 // *** Config
 #include <liberate.h>
 
-#if defined(LIBERATE_IS_BUILDING)
+#if defined(LIBERATE_IS_BUILDING) && LIBERATE_IS_BUILDING > 0
 #include "../../../lib/net/netincludes.h"
 #endif // LIBERATE_IS_BUILDING
 
@@ -57,7 +57,7 @@ namespace detail {
  **/
 union address_data
 {
-#if defined(LIBERATE_IS_BUILDING)
+#if defined(LIBERATE_IS_BUILDING) && LIBERATE_IS_BUILDING > 0
   sockaddr          sa;
   sockaddr_in       sa_in;
   sockaddr_in6      sa_in6;

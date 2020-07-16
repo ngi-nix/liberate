@@ -29,7 +29,7 @@
 #include <sstream>
 #include <ios>
 
-#if defined(LIBERATE_IS_BUILDING)
+#if defined(LIBERATE_IS_BUILDING) && LIBERATE_IS_BUILDING > 0
 #include <build-config.h>
 #endif
 
