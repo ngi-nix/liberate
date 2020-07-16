@@ -29,7 +29,7 @@
 #include <string>
 #include <map>
 
-#include <liberate/cpp/operators.h>
+#include <liberate/cpp/operators/comparison.h>
 
 namespace liberate::net {
 
@@ -54,7 +54,7 @@ namespace liberate::net {
  * boolean values to simple "0" and "1" (e.g. "true", "yes", etc.).
  */
 struct LIBERATE_API url
-  : public ::liberate::cpp::operators<url>
+  : public ::liberate::cpp::comparison_operators<url>
 {
 public:
   // Data members
@@ -76,7 +76,7 @@ public:
   size_t hash() const;
 
 private:
-  friend struct liberate::cpp::operators<url>;
+  friend struct liberate::cpp::comparison_operators<url>;
 
   bool is_less_than(url const & other) const;
   bool is_equal_to(url const & other) const;

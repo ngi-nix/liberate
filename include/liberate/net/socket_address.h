@@ -36,7 +36,7 @@
 #include <cstddef>
 
 // *** Own includes
-#include <liberate/cpp/operators.h>
+#include <liberate/cpp/operators/comparison.h>
 #include <liberate/net/address_type.h>
 
 namespace liberate::net {
@@ -81,7 +81,7 @@ union address_data
  * Make it possible to use struct sockaddr as a map key.
  **/
 class LIBERATE_API socket_address
-  : public ::liberate::cpp::operators<socket_address>
+  : public ::liberate::cpp::comparison_operators<socket_address>
 {
 public:
 
@@ -197,7 +197,7 @@ public:
   void operator++();
 
   /**
-   * Used by util::operators
+   * Used by cpp::comparison_operators
    **/
   bool is_equal_to(socket_address const & other) const;
   bool is_less_than(socket_address const & other) const;

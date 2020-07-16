@@ -21,12 +21,12 @@
 
 #include <gtest/gtest.h>
 
-struct foo : public liberate::cpp::operators<foo>
+struct foo : public liberate::cpp::comparison_operators<foo>
 {
   int a;
 
   foo(int _a)
-    : liberate::cpp::operators<foo>{}
+    : liberate::cpp::comparison_operators<foo>{}
     , a(_a)
   {
   }

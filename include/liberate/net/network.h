@@ -31,7 +31,7 @@
 #include <stdexcept>
 
 // *** Own includes
-#include <liberate/cpp/operators.h>
+#include <liberate/cpp/operators/comparison.h>
 #include <liberate/net/address_type.h>
 #include <liberate/net/socket_address.h>
 
@@ -51,7 +51,7 @@ class socket_address;
  * within a network.
  **/
 class LIBERATE_API network
-  : public ::liberate::cpp::operators<network>
+  : public ::liberate::cpp::comparison_operators<network>
 {
 public:
   /**
@@ -147,9 +147,9 @@ public:
 
 protected:
   /**
-   * Used by cpp::operators
+   * Used by cpp::comparison_operators
    **/
-  friend struct liberate::cpp::operators<network>;
+  friend struct liberate::cpp::comparison_operators<network>;
 
   virtual bool is_equal_to(network const & other) const;
   virtual bool is_less_than(network const & other) const;
