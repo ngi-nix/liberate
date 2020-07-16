@@ -193,6 +193,14 @@ compiler.sizeof('int64_t', prefix: '#include <stdint.h>')
 compiler.sizeof('uint64_t', prefix: '#include <stdint.h>')
 compiler.sizeof('size_t', prefix: '#include <stdint.h>')
 compiler.sizeof('ssize_t', prefix: '#include <stdint.h>')
+char8_size = compiler.sizeof('char8_t')
+if char8_size > 0
+  conf_data.set('LIBERATE_HAVE_CHAR8_T', true)
+endif
+wchar_size = compiler.sizeof('wchar_t')
+if wchar_size > 0
+  conf_data.set('LIBERATE_HAVE_WCHAR_T', true)
+endif
 
 
 have_strerror_s = compiler.compiles('''
@@ -279,6 +287,12 @@ install_headers(
   'include' / 'liberate' / 'logging.h',
 
   subdir: 'liberate',
+)
+
+install_headers(
+  'include' / 'liberate' / 'types' / 'varint.h',
+
+  subdir: 'liberate' / 'types',
 )
 
 install_headers(
@@ -385,6 +399,7 @@ if not meson.is_subproject()
     'test' / 'net' / 'socket_address.cpp',
     'test' / 'net' / 'network.cpp',
     'test' / 'net' / 'url.cpp',
+    'test' / 'types' / 'varint.cpp',
     'test' / 'runner.cpp',
   ]
 

@@ -37,6 +37,13 @@
 #mesondefine LIBERATE_HAVE_AFUNIX_H
 
 /*****************************************************************************
+ * Types
+ **/
+#mesondefine LIBERATE_HAVE_CHAR8_T
+#mesondefine LIBERATE_HAVE_WCHAR_T
+
+
+/*****************************************************************************
  * Symbols
  **/
 #mesondefine LIBERATE_HAVE_STRERROR_S
