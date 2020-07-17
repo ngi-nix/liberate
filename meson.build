@@ -335,6 +335,7 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'serialization' / 'integer.h',
+  'include' / 'liberate' / 'serialization' / 'varint.h',
 
   subdir: 'liberate' / 'serialization',
 )
@@ -409,6 +410,7 @@ if not meson.is_subproject()
     'test' / 'types' / 'varint.cpp',
     'test' / 'types' / 'type_traits.cpp',
     'test' / 'serialization' / 'integer.cpp',
+    'test' / 'serialization' / 'varint.cpp',
     'test' / 'runner.cpp',
   ]
 
