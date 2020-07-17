@@ -464,6 +464,7 @@ from_varint(varint const & v)
  * Output operator
  */
 
+inline
 std::ostream &
 operator<<(std::ostream & os, varint const & v)
 {
