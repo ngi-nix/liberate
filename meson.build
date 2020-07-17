@@ -291,6 +291,7 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'types' / 'varint.h',
+  'include' / 'liberate' / 'types' / 'type_traits.h',
 
   subdir: 'liberate' / 'types',
 )
@@ -330,6 +331,12 @@ install_headers(
   'include' / 'liberate' / 'cpp' / 'operators' / 'comparison.h',
 
   subdir: 'liberate' / 'cpp' / 'operators',
+)
+
+install_headers(
+  'include' / 'liberate' / 'serialization' / 'integer.h',
+
+  subdir: 'liberate' / 'serialization',
 )
 
 
@@ -400,6 +407,8 @@ if not meson.is_subproject()
     'test' / 'net' / 'network.cpp',
     'test' / 'net' / 'url.cpp',
     'test' / 'types' / 'varint.cpp',
+    'test' / 'types' / 'type_traits.cpp',
+    'test' / 'serialization' / 'integer.cpp',
     'test' / 'runner.cpp',
   ]
 
