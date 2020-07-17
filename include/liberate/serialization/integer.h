@@ -91,6 +91,10 @@ template <
 constexpr integer_serialization_enabled<inT>
 serialize_int_impl(outT * output, std::size_t output_length, inT const & value)
 {
+  if (!output) {
+    return 0;
+  }
+
   constexpr std::size_t const input_size = sizeof(inT);
   constexpr std::size_t const out_unit_size = sizeof(outT);
   if (input_size > out_unit_size * output_length) {
