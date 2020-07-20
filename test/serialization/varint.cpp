@@ -84,3 +84,59 @@ TEST(SerializationVarint, serialize_to_byte)
   ASSERT_EQ(written, 1);
   ASSERT_EQ(out[0], static_cast<std::byte>(127));
 }
+
+
+TEST(SerializationVarint, deserialize_from_uint8_t)
+{
+  using namespace liberate::types::literals;
+  using namespace liberate::types;
+  using namespace liberate::serialization;
+
+  uint8_t in[] = { 0x87, 0x87, 0x85, 0x04, 0xde, 0xad };
+
+  varint result;
+  auto read = deserialize_varint(result, in, sizeof(in));
+
+  ASSERT_EQ(read, 4);
+  ASSERT_EQ(result, 0x01020304_var);
+
+  // A value of 127 or less should be encoded in one byte.
+  uint8_t in2[] = { 127, 0xde, 0xad };
+  read = deserialize_varint(result, in2, sizeof(in2));
+  ASSERT_EQ(read, 1);
+  ASSERT_EQ(result, 127_var);
+}
+
+
+TEST(SerializationVarint, deserialize_from_byte)
+{
+  using namespace liberate::types::literals;
+  using namespace liberate::types;
+  using namespace liberate::serialization;
+
+  std::byte in[] = {
+    static_cast<std::byte>(0x87),
+    static_cast<std::byte>(0x87),
+    static_cast<std::byte>(0x85),
+    static_cast<std::byte>(0x04),
+    static_cast<std::byte>(0xde),
+    static_cast<std::byte>(0xad),
+  };
+
+  varint result;
+  auto read = deserialize_varint(result, in, sizeof(in));
+
+  ASSERT_EQ(read, 4);
+  ASSERT_EQ(result, 0x01020304_var);
+
+  // A value of 127 or less should be encoded in one byte.
+  std::byte in2[] = {
+    static_cast<std::byte>(127),
+    static_cast<std::byte>(0xde),
+    static_cast<std::byte>(0xad),
+  };
+  read = deserialize_varint(result, in2, sizeof(in2));
+  ASSERT_EQ(read, 1);
+  ASSERT_EQ(result, 127_var);
+}
+

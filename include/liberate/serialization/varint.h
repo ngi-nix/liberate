@@ -55,7 +55,7 @@ template <
 std::size_t
 serialize_varint(outT * output, std::size_t output_length, ::liberate::types::varint const & value)
 {
-  if (!output) {
+  if (!output || !output_length) {
     return 0;
   }
 
@@ -85,6 +85,52 @@ serialize_varint(outT * output, std::size_t output_length, ::liberate::types::va
   // Copy over.
   ::memcpy(output, buf + offset, written);
   return written;
+}
+
+
+/**
+ * Deserialize from buffer.
+ *
+ * If decoding did not work, zero is returned. Otherwise, the number of
+ * units from the the buffer is.
+ *
+ * Note: the function is restricted to 8-bit output buffer types only.
+ */
+template <
+  typename inT,
+  std::enable_if_t<liberate::types::is_8bit_type<inT>::value, int> = 0
+>
+std::size_t
+deserialize_varint(::liberate::types::varint & value, inT const * input, std::size_t input_length)
+{
+  using varint_base = liberate::types::varint_base;
+
+  if (!input || !input_length) {
+    return 0;
+  }
+
+  // Some things are simpler without C++ warnings. Ah, well, lots of casts
+  // it is.
+  using unsigned_base = std::make_unsigned<varint_base>::type;
+  constexpr auto const mask = static_cast<varint_base>(
+      std::numeric_limits<unsigned_base>::max() << ((sizeof(unsigned_base) * 8) - 7)
+  );
+
+  inT const * buf = input;
+  inT c = *buf++;
+  varint_base val = static_cast<varint_base>(c & static_cast<inT>(127));
+  while ((c & static_cast<inT>(128)) > static_cast<inT>(0)) {
+    val += 1;
+    if (!val || (val & mask)) {
+      // Overflow
+      return 0;
+    }
+    c = *buf++;
+    val = (val << 7) + static_cast<varint_base>((c & static_cast<inT>(127)));
+  }
+
+  value = liberate::types::varint{val};
+  return (buf - input);
 }
 
 
