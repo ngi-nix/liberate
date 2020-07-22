@@ -71,3 +71,55 @@ TEST(SerializationInteger, detail_serialize_to_uint16_t)
   ASSERT_EQ(out[0], 0x0102);
   ASSERT_EQ(out[1], 0x0304);
 }
+
+
+TEST(SerializationInteger, deserialize_from_char)
+{
+  using namespace liberate::serialization;
+
+  char buf[] = { 0x01, 0x02, 0x03, 0x04,
+    static_cast<char>(0xde), static_cast<char>(0xad) };
+
+  uint32_t result = 0;
+  auto read = deserialize_int(result, buf, sizeof(buf));
+
+  ASSERT_EQ(read, 4);
+
+  ASSERT_EQ(result, 0x01020304);
+}
+
+
+TEST(SerializationInteger, deserialize_from_byte)
+{
+  using namespace liberate::serialization;
+
+  std::byte buf[] = {
+    static_cast<std::byte>(0x01),
+    static_cast<std::byte>(0x02),
+    static_cast<std::byte>(0x03),
+    static_cast<std::byte>(0x04),
+    static_cast<std::byte>(0xde),
+    static_cast<std::byte>(0xad),
+  };
+
+  uint32_t result = 0;
+  auto read = deserialize_int(result, buf, sizeof(buf));
+
+  ASSERT_EQ(read, 4);
+
+  ASSERT_EQ(result, 0x01020304);
+}
+
+
+TEST(SerializationInteger, detail_deserialize_from_uint16_t)
+{
+  using namespace liberate::serialization;
+
+  uint16_t buf[] = { 0x0102, 0x0304, 0xdead };
+
+  uint32_t result = 0;
+  auto read = detail::deserialize_int_impl(result, buf, sizeof(buf));
+  ASSERT_EQ(read, 2);
+
+  ASSERT_EQ(result, 0x01020304);
+}

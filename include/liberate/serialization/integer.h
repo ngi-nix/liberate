@@ -89,9 +89,9 @@ template <
   typename inT
 >
 constexpr integer_serialization_enabled<inT>
-serialize_int_impl(outT * output, std::size_t output_length, inT const & value)
+serialize_int_impl(outT * output, std::size_t const & output_length, inT const & value)
 {
-  if (!output) {
+  if (!output || !output_length) {
     return 0;
   }
 
@@ -111,6 +111,36 @@ serialize_int_impl(outT * output, std::size_t output_length, inT const & value)
 
   return written;
 }
+
+
+
+template <
+  typename outT,
+  typename inT
+>
+constexpr integer_serialization_enabled<outT>
+deserialize_int_impl(outT & output, inT const * input, std::size_t input_length)
+{
+  if (!input || !input_length) {
+    return 0;
+  }
+
+  constexpr std::size_t const output_size = sizeof(outT);
+  constexpr std::size_t const in_unit_size = sizeof(inT);
+  if (output_size > in_unit_size * input_length) {
+    return 0;
+  }
+
+  std::size_t read = 0;
+  output = outT{0};
+  for (std::size_t i = output_size / in_unit_size ; i > 0 ; --i) {
+    output += static_cast<outT>(input[i - 1]) << (output_size - (i * in_unit_size)) * 8;
+    ++read;
+  }
+
+  return read;
+}
+
 
 } // namespace detail
 
@@ -139,6 +169,31 @@ serialize_int(outT * output, std::size_t output_length, inT const & value)
   return detail::serialize_int_impl(output, output_length, value);
 }
 
+
+/**
+ * Deserialize from buffer.
+ *
+ * The buffer is defined by a pointer and a size. The input is an
+ * integer value for which deserialize_int is explicitly enabled (see above).
+ *
+ * If the buffer is too small, zero is returned. Otherwise, the number of
+ * units read from the buffer is.
+ *
+ * Note: the function is restricted to 8-bit output buffer types only, though
+ *       the detail implementation works for other values. The reason is that
+ *       for actual cross-platform value serialization, only 8-bit buffers
+ *       matter.
+ */
+template <
+  typename outT,
+  typename inT,
+  std::enable_if_t<liberate::types::is_8bit_type<inT>::value, int> = 0
+>
+constexpr integer_serialization_enabled<outT>
+deserialize_int(outT & output, inT const * input, std::size_t const & input_length)
+{
+  return detail::deserialize_int_impl(output, input, input_length);
+}
 
 } // namespace liberate::serialization
 
