@@ -19,6 +19,8 @@
  **/
 #include <liberate/fs/tmp.h>
 
+#include <fstream>
+
 #include <gtest/gtest.h>
 
 
@@ -41,4 +43,13 @@ TEST(FsTmp, contains_prefix)
 
   auto pos = tmp.find("foo");
   ASSERT_NE(pos, std::string::npos);
+}
+
+
+TEST(FsTmp, open_file)
+{
+  auto tmp = liberate::fs::temp_name("foo");
+  std::ofstream os(tmp.c_str());
+  os << "test";
+  os.close();
 }
