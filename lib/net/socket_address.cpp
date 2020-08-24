@@ -113,6 +113,63 @@ socket_address::socket_address(void const * buf, size_t len)
 
 
 
+socket_address::socket_address(address_type type, void const * buf, size_t len,
+    uint16_t port /* = 0 */)
+{
+  // Need to zero data.
+  ::memset(&data.sa_storage, 0, sizeof(data));
+
+  if (type == AT_UNSPEC) {
+    data.sa_storage.ss_family = AF_UNSPEC;
+    // No data copying necessary.
+    return;
+  }
+
+  if (!buf) {
+    throw std::invalid_argument("socket_address: cannot construct without "
+        "data.");
+  }
+
+  switch (type) {
+    case AT_INET4:
+      if (len != sizeof(data.sa_in.sin_addr)) {
+        throw std::invalid_argument("socket_address: input buffer size invalid"
+            "for address type.");
+      }
+      data.sa_storage.ss_family = AF_INET;
+      ::memcpy(&data.sa_in.sin_addr, buf, len);
+      data.sa_in.sin_port = htons(port);
+      break;
+
+    case AT_INET6:
+      if (len != sizeof(data.sa_in6.sin6_addr)) {
+        throw std::invalid_argument("socket_address: input buffer size invalid"
+            "for address type.");
+      }
+      data.sa_storage.ss_family = AF_INET6;
+      ::memcpy(&data.sa_in6.sin6_addr, buf, len);
+      data.sa_in6.sin6_port = htons(port);
+      break;
+
+#if defined(LIBERATE_HAVE_SOCKADDR_UN)
+    case AT_LOCAL:
+      if (len < 1) {
+        throw std::invalid_argument("socket_address: input buffer size invalid"
+            "for address type.");
+      }
+      data.sa_storage.ss_family = AF_UNIX;
+      ::memcpy(&data.sa_un.sun_path, buf, std::min(len, size_t{UNIX_PATH_MAX}));
+      break;
+#endif
+
+    default:
+      throw std::logic_error("Line should be unreachable!");
+      break;
+  }
+}
+
+
+
 socket_address::socket_address(std::string const & address,
     uint16_t port /* = 0 */)
 {

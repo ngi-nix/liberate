@@ -101,6 +101,13 @@ public:
    **/
   socket_address(void const * buf, size_t len);
 
+  /**
+   * Construct from address type and buffer. This constructor selects the type
+   * of sockaddr struct used internally.
+   **/
+  socket_address(address_type type, void const * buf, size_t len,
+      uint16_t port = 0);
+
 
   /**
    * Alternative constructor. The string is expected to be a network address

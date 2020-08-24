@@ -316,6 +316,7 @@ install_headers(
   'include' / 'liberate' / 'net' / 'socket_address.h',
   'include' / 'liberate' / 'net' / 'network.h',
   'include' / 'liberate' / 'net' / 'url.h',
+  'include' / 'liberate' / 'net' / 'ip.h',
 
   subdir: 'liberate' / 'net',
 )
@@ -353,6 +354,7 @@ libsrc = [
   'lib' / 'net' / 'socket_address.cpp',
   'lib' / 'net' / 'network.cpp',
   'lib' / 'net' / 'url.cpp',
+  'lib' / 'net' / 'ip.cpp',
 ]
 
 
@@ -407,6 +409,7 @@ if not meson.is_subproject()
     'test' / 'net' / 'socket_address.cpp',
     'test' / 'net' / 'network.cpp',
     'test' / 'net' / 'url.cpp',
+    'test' / 'net' / 'ip.cpp',
     'test' / 'types' / 'varint.cpp',
     'test' / 'types' / 'type_traits.cpp',
     'test' / 'serialization' / 'integer.cpp',
