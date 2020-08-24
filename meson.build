@@ -244,10 +244,12 @@ configure_file(
   configuration: conf_data
 )
 
+main_build_dir = declare_dependency(
+  include_directories: include_directories('.')
+)
+
 ##############################################################################
 # Meson Wrap Dependencies
-gtest = subproject('gtest')
-
 define = '-D'
 if compiler_id == 'msvc'
   define = '/D'
@@ -377,67 +379,9 @@ liberate_dep = declare_dependency(
 )
 
 
-
 ##############################################################################
-# Tests
-
-# Tests in a subproject are complicicated. You need all the compile and
-# link flags from the enclosing project, etc.
-if not meson.is_subproject()
-
-  # See https://github.com/google/googletest/issues/813
-  test_args = []
-  if host_machine.system() == 'cygwin'
-    test_args += ['-D_POSIX_C_SOURCE=200809L']
-  endif
-
-  # Google test issues this warning; disable it in *test* code only.
-  if compiler_id == 'msvc'
-    test_args = [
-      '/wd4389',
-    ]
-  endif
-
-  test_src = [
-    'test' / 'cpp' / 'hash.cpp',
-    'test' / 'cpp' / 'operators' / 'comparison.cpp',
-    'test' / 'string' / 'util.cpp',
-    'test' / 'string' / 'utf8.cpp',
-    'test' / 'string' / 'urlencode.cpp',
-    'test' / 'fs' / 'path.cpp',
-    'test' / 'fs' / 'tmp.cpp',
-    'test' / 'net' / 'socket_address.cpp',
-    'test' / 'net' / 'network.cpp',
-    'test' / 'net' / 'url.cpp',
-    'test' / 'net' / 'ip.cpp',
-    'test' / 'types' / 'varint.cpp',
-    'test' / 'types' / 'type_traits.cpp',
-    'test' / 'serialization' / 'integer.cpp',
-    'test' / 'serialization' / 'varint.cpp',
-    'test' / 'runner.cpp',
-  ]
-
-  # Additional tests only if -DDEBUG is given
-  if bt in ['debug', 'debugoptimized']
-    test_src += [
-      'test' / 'net' / 'cidr.cpp',
-    ]
-  endif
-
-  unittests = executable('unittests', test_src,
-      dependencies: [
-        liberate_dep,
-        gtest.get_variable('gtest_dep'),
-      ],
-      cpp_args: test_args + cpp_lib_is_building,
-  )
-  test('unittests', unittests)
-
-endif
-
-
-##############################################################################
-# Examples
+# Subdirs
+subdir('test')
 subdir('examples')
 
 ##############################################################################
