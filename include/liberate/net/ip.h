@@ -40,15 +40,15 @@ namespace liberate::net {
  *
  * Consequently, if you feed it bad data, it will return a bad socket address.
  */
-bool
+LIBERATE_API bool
 parse_addresses(socket_address & source, socket_address & dest,
     std::byte const * buffer, size_t bufsize);
 
-bool
+LIBERATE_API bool
 parse_source_address(socket_address & source,
     std::byte const * buffer, size_t bufsize);
 
-bool
+LIBERATE_API bool
 parse_dest_address(socket_address & dest,
     std::byte const * buffer, size_t bufsize);
 
