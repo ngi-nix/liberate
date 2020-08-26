@@ -129,8 +129,10 @@ resolve_internal(std::set<socket_address> & results, int family,
 } // anonymous namespace
 
 
+// Note: the api instance is unused, but we need an instance for WSASetup() to
+//       have occurred.
 std::set<socket_address>
-resolve(address_type type, std::string const & hostname)
+resolve(api &, address_type type, std::string const & hostname)
 {
   // Validate input & set hints
   if (hostname.empty()) {
