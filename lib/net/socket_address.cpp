@@ -134,7 +134,7 @@ socket_address::socket_address(address_type type, void const * buf, size_t len,
     case AT_INET4:
       if (len != sizeof(data.sa_in.sin_addr)) {
         throw std::invalid_argument("socket_address: input buffer size invalid"
-            "for address type.");
+            " for address type.");
       }
       data.sa_storage.ss_family = AF_INET;
       ::memcpy(&data.sa_in.sin_addr, buf, len);
@@ -433,12 +433,11 @@ socket_address::is_equal_to(socket_address const & other) const
 bool
 socket_address::is_less_than(socket_address const & other) const
 {
-  // First compare families. It's a bit hard to decide what to return if the
-  // families mismatch, but 'false' seems sensible.
+  // First compare families. The order is unimportant, but comparing on
+  // the actual family value is a nice quick way to deal with this.
   if (data.sa_storage.ss_family != other.data.sa_storage.ss_family) {
-    return false;
+    return data.sa_storage.ss_family < other.data.sa_storage.ss_family;
   }
-
 
   // Now compare depending on family. IPv4 is simple.
   if (AF_INET == data.sa_storage.ss_family) {
