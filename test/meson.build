@@ -31,6 +31,7 @@ if not meson.is_subproject()
     'net' / 'network.cpp',
     'net' / 'url.cpp',
     'net' / 'ip.cpp',
+    'net' / 'resolve.cpp',
     'types' / 'varint.cpp',
     'types' / 'type_traits.cpp',
     'serialization' / 'integer.cpp',

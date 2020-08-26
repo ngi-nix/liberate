@@ -192,33 +192,6 @@ if wchar_size > 0
   conf_data.set('LIBERATE_HAVE_WCHAR_T', true)
 endif
 
-
-have_strerror_s = compiler.compiles('''
-#include <string.h>
-
-int main(int, char**)
-{
-  char buf[1];
-  auto e = strerror_s(buf, sizeof(buf), 0);
-}
-''', name: 'strerror_s()')
-conf_data.set('LIBERATE_HAVE_STRERROR_S', have_strerror_s)
-
-have_strerror_r = compiler.compiles('''
-#include <string.h>
-
-#if (_POSIX_C_SOURCE >= 200112L) && !_GNU_SOURCE
-#  error "No XSI compliant version!"
-#endif
-
-int main(int, char**)
-{
-  char buf[1];
-  int e = strerror_r(0, buf, sizeof(buf));
-}
-''', name: 'strerror_r()')
-conf_data.set('LIBERATE_HAVE_STRERROR_R', have_strerror_r)
-
 have_getaddrinfo = compiler.compiles('''
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -226,11 +199,23 @@ have_getaddrinfo = compiler.compiles('''
 
 int main(int, char**)
 {
-  char buf[1];
-  int e = strerror_r(0, buf, sizeof(buf));
+  auto res = getaddrinfo(nullptr, nullptr, nullptr, nullptr);
 }
 ''', name: 'getaddrinfo()')
 conf_data.set('LIBERATE_HAVE_GETADDRINFO', have_getaddrinfo)
+
+have_ai_idn = compiler.compiles('''
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int main(int, char**)
+{
+  int x = AI_IDN;
+}
+''', name: 'AI_IDN define')
+conf_data.set('LIBERATE_HAVE_AI_IDN', have_ai_idn)
+
 
 
 ### Set values from options
@@ -319,6 +304,7 @@ install_headers(
   'include' / 'liberate' / 'net' / 'network.h',
   'include' / 'liberate' / 'net' / 'url.h',
   'include' / 'liberate' / 'net' / 'ip.h',
+  'include' / 'liberate' / 'net' / 'resolve.h',
 
   subdir: 'liberate' / 'net',
 )
@@ -357,6 +343,7 @@ libsrc = [
   'lib' / 'net' / 'network.cpp',
   'lib' / 'net' / 'url.cpp',
   'lib' / 'net' / 'ip.cpp',
+  'lib' / 'net' / 'resolve.cpp',
 ]
 
 
