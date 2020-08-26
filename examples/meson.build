@@ -33,7 +33,7 @@ if not meson.is_subproject()
   endif
 
   # Loguru
-  if host_type != 'android' and host_type != 'win32'
+  if host_type != 'android' and host_type != 'win32' and not host_machine.system().endswith('bsd')
     loguru = subproject('emilk-loguru',
       default_options: [
         'loguru_with_streams=true',

@@ -216,6 +216,29 @@ int main(int, char**)
 ''', name: 'AI_IDN define')
 conf_data.set('LIBERATE_HAVE_AI_IDN', have_ai_idn)
 
+have_eai_addrfamily = compiler.compiles('''
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int main(int, char**)
+{
+  int x = EAI_ADDRFAMILY;
+}
+''', name: 'EAI_ADDRFAMILY define')
+conf_data.set('LIBERATE_HAVE_EAI_ADDRFAMILY', have_eai_addrfamily)
+
+have_eai_nodata = compiler.compiles('''
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int main(int, char**)
+{
+  int x = EAI_NODATA;
+}
+''', name: 'EAI_NODATA define')
+conf_data.set('LIBERATE_HAVE_EAI_NODATA', have_eai_nodata)
 
 
 ### Set values from options
@@ -246,7 +269,7 @@ if log_backend == 'LIBERATE_LOG_BACKEND_PLOG'
   plog = subproject('sergiusthebest-plog')
   log_deps = [plog.get_variable('plog_dep')]
   log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_PLOG']
-elif log_backend == 'LIBERATE_LOG_BACKEND_LOGURU'
+elif log_backend == 'LIBERATE_LOG_BACKEND_LOGURU' and not host_machine.system().endswith('bsd')
   loguru = subproject('emilk-loguru')
   log_deps = [loguru.get_variable('emilk_loguru_dep')]
   log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_LOGURU']

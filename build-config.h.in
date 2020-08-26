@@ -48,6 +48,8 @@
  **/
 #mesondefine LIBERATE_HAVE_GETADDRINFO
 #mesondefine LIBERATE_HAVE_AI_IDN
+#mesondefine LIBERATE_HAVE_EAI_ADDRFAMILY
+#mesondefine LIBERATE_HAVE_EAI_NODATA
 
 /*****************************************************************************
  * Platform checks
