@@ -23,7 +23,7 @@
 
 template <typename T>
 class VarintTest: public ::testing::Test {};
-TYPED_TEST_CASE_P(VarintTest);
+TYPED_TEST_SUITE_P(VarintTest);
 
 TYPED_TEST_P(VarintTest, instanciate)
 {
@@ -123,7 +123,7 @@ TYPED_TEST_P(VarintTest, modulo_assign)
 }
 
 
-REGISTER_TYPED_TEST_CASE_P(VarintTest,
+REGISTER_TYPED_TEST_SUITE_P(VarintTest,
     instanciate,
     negate,
     add,

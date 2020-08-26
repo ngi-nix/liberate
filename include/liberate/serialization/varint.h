@@ -28,14 +28,27 @@
 
 #include <string.h>
 
-#include <cmath>
 #include <type_traits>
-#include <iostream> // FIXME
 
 #include <liberate/types/type_traits.h>
 #include <liberate/types/varint.h>
 
 namespace liberate::serialization {
+
+namespace detail {
+
+/**
+ * Unfortunately, std::ceil is not constexpr everywhere, so we use our own
+ * version here.
+ */
+constexpr std::size_t ceil(double input)
+{
+  return (static_cast<double>(static_cast<std::size_t>(input)) == input)
+    ? static_cast<std::size_t>(input)
+    : static_cast<std::size_t>(input) + ((input > 0) ? 1 : 0);
+}
+
+} // namespace detail
 
 /**
  * Serialize to buffer.
@@ -65,7 +78,7 @@ serialize_varint(outT * output, std::size_t output_length, ::liberate::types::va
 
   // We require a buffer of at least enough size to store the largest possible
   // value in 7 bits instead of 8.
-  constexpr std::size_t const buf_size = std::ceil(double{input_size * 8} / 7);
+  constexpr std::size_t const buf_size = detail::ceil(double{input_size * 8} / 7);
   outT buf[buf_size];
 
   // Start at the end

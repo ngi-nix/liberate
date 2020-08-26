@@ -61,7 +61,7 @@ TEST(SerializationVarint, serialize_to_byte)
   using namespace liberate::types;
   using namespace liberate::serialization;
 
-  std::byte out[20] = { 0 };
+  std::byte out[20] = { std::byte{0} };
 
   auto test = 0x01020304_var;
 
