@@ -79,13 +79,16 @@ resolve_internal(std::set<socket_address> & results, int family,
       break;
 
     case EAI_NONAME: // Just no results
+    case EAI_SERVICE:
 #  if defined(LIBERATE_HAVE_EAI_NODATA)
     case EAI_NODATA:
 #  endif
 #  if defined(LIBERATE_HAVE_EAI_ADDRFAMILY)
     case EAI_ADDRFAMILY:
 #  endif
-    case EAI_SERVICE:
+#  if defined(LIBERATE_WIN32)
+    case WSANO_DATA:
+#  endif
       return;
 
     case EAI_FAMILY:
@@ -96,12 +99,18 @@ resolve_internal(std::set<socket_address> & results, int family,
     case EAI_AGAIN:
     case EAI_FAIL:
     case EAI_MEMORY:
-#if  defined(LIBERATE_HAVE_EAI_SYSTEM)
+#  if defined(LIBERATE_HAVE_EAI_SYSTEM)
     case EAI_SYSTEM:
-#endif
+#  endif
       throw std::runtime_error(gai_strerror(err));
 
+#  if defined(LIBERATE_WIN32)
+    case WSANOTINITIALISED:
+      throw std::logic_error("WSA not initialized!");
+#  endif
+
     default:
+      std::cout << "WSAGetLastError: "<< WSAGetLastError() << std::endl;
       throw std::logic_error("Unknown error encountered.");
       break;
   }
