@@ -50,6 +50,7 @@
 #mesondefine LIBERATE_HAVE_AI_IDN
 #mesondefine LIBERATE_HAVE_EAI_ADDRFAMILY
 #mesondefine LIBERATE_HAVE_EAI_NODATA
+#mesondefine LIBERATE_HAVE_EAI_SYSTEM
 
 /*****************************************************************************
  * Platform checks

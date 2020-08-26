@@ -240,6 +240,18 @@ int main(int, char**)
 ''', name: 'EAI_NODATA define')
 conf_data.set('LIBERATE_HAVE_EAI_NODATA', have_eai_nodata)
 
+have_eai_system = compiler.compiles('''
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int main(int, char**)
+{
+  int x = EAI_SYSTEM;
+}
+''', name: 'EAI_SYSTEM define')
+conf_data.set('LIBERATE_HAVE_EAI_SYSTEM', have_eai_system)
+
 
 ### Set values from options
 log_backend = 'LIBERATE_LOG_BACKEND_' + get_option('log_backend').to_upper()
