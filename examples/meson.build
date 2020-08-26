@@ -20,7 +20,7 @@ if not meson.is_subproject()
 
   # Plog
   if host_type != 'win32'
-    plog = subproject('plog')
+    plog = subproject('sergiusthebest-plog')
     example_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_PLOG']
     executable('log_plog', ['logging' / 'main.cpp'],
       dependencies: [
@@ -34,7 +34,7 @@ if not meson.is_subproject()
 
   # Loguru
   if host_type != 'android' and host_type != 'win32'
-    loguru = subproject('loguru',
+    loguru = subproject('emilk-loguru',
       default_options: [
         'loguru_with_streams=true',
       ],
