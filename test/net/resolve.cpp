@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "../test_name.h"
+#include "../env.h"
 
 
 #define INTERPEER_IO_V4 "88.99.83.249"
@@ -36,7 +37,7 @@ TEST(Resolve, localhost_any)
   // depending on how the test host is connected. Still, that's not
   // actually bad.
   // We could also have zero in an entirely non-networked situation.
-  auto result = net::resolve(net::AT_UNSPEC, "localhost");
+  auto result = net::resolve(test_env->api, net::AT_UNSPEC, "localhost");
   if (result.empty()) {
     GTEST_SKIP() << "Perhaps the test host has no network?";
   }
@@ -56,7 +57,7 @@ TEST(Resolve, localhost_any)
 TEST(Resolve, test_domain_error)
 {
   // As per specs, domains ending in .test should never be resolvable.
-  auto result = net::resolve(net::AT_UNSPEC, "resolve.test");
+  auto result = net::resolve(test_env->api, net::AT_UNSPEC, "resolve.test");
   ASSERT_TRUE(result.empty());
 }
 
@@ -65,7 +66,7 @@ TEST(Resolve, interpeer_any)
 {
   // If the interpeer configuration does not change, this should yield IPv4
   // and IPv6 addresses
-  auto result = net::resolve(net::AT_UNSPEC, "interpeer.io");
+  auto result = net::resolve(test_env->api, net::AT_UNSPEC, "interpeer.io");
   if (result.empty()) {
     GTEST_SKIP() << "Perhaps the test host has no network?";
   }
@@ -81,7 +82,7 @@ TEST(Resolve, interpeer_any)
 
 TEST(Resolve, interpeer_ipv4)
 {
-  auto result = net::resolve(net::AT_INET4, "interpeer.io");
+  auto result = net::resolve(test_env->api, net::AT_INET4, "interpeer.io");
   if (result.empty()) {
     GTEST_SKIP() << "Perhaps the test host has no network?";
   }
@@ -93,7 +94,7 @@ TEST(Resolve, interpeer_ipv4)
 
 TEST(Resolve, interpeer_ipv6)
 {
-  auto result = net::resolve(net::AT_INET6, "interpeer.io");
+  auto result = net::resolve(test_env->api, net::AT_INET6, "interpeer.io");
   if (result.empty()) {
     GTEST_SKIP() << "Perhaps the test host has no network?";
   }

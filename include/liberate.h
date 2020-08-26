@@ -26,6 +26,8 @@
 #error You are trying to include a C++ only header file
 #endif
 
+#include <memory>
+
 /**
  * Which platform are we on?
  **/
@@ -63,5 +65,24 @@
 #    undef __UNDEF_LEAN_AND_MEAN
 #  endif
 #endif
+
+namespace liberate {
+
+/**
+ * Liberate needs an API instance for some things.
+ */
+class LIBERATE_API api
+{
+public:
+  api();
+  ~api();
+
+private:
+  struct api_impl;
+  std::unique_ptr<api_impl> m_impl;
+};
+
+
+} // namespace liberate
 
 #endif // guard

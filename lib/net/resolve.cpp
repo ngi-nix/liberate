@@ -19,10 +19,17 @@
  **/
 #include <build-config.h>
 
+#include "netincludes.h"
+
 #if defined(LIBERATE_HAVE_GETADDRINFO)
 #  include <sys/types.h>
 #  include <sys/socket.h>
 #  include <netdb.h>
+#  define GETADDRINFO_IS_IMPLEMENTED
+#endif
+
+#if defined(LIBERATE_HAVE_WS2TCPIP_H)
+#  define GETADDRINFO_IS_IMPLEMENTED
 #endif
 
 #include <liberate/net/resolve.h>
@@ -53,7 +60,7 @@ void
 resolve_internal(std::set<socket_address> & results, int family,
     std::string const & hostname)
 {
-#if defined(LIBERATE_HAVE_GETADDRINFO)
+#if defined(GETADDRINFO_IS_IMPLEMENTED)
   // Construct hints
   struct addrinfo hints = {};
   hints.ai_family = family;
@@ -72,13 +79,16 @@ resolve_internal(std::set<socket_address> & results, int family,
       break;
 
     case EAI_NONAME: // Just no results
-#  if defined(EAI_NODATA)
+    case EAI_SERVICE:
+#  if defined(LIBERATE_HAVE_EAI_NODATA)
     case EAI_NODATA:
 #  endif
-#  if defined(EAI_ADDRFAMILY)
+#  if defined(LIBERATE_HAVE_EAI_ADDRFAMILY)
     case EAI_ADDRFAMILY:
 #  endif
-    case EAI_SERVICE:
+#  if defined(LIBERATE_WIN32)
+    case WSANO_DATA:
+#  endif
       return;
 
     case EAI_FAMILY:
@@ -89,8 +99,15 @@ resolve_internal(std::set<socket_address> & results, int family,
     case EAI_AGAIN:
     case EAI_FAIL:
     case EAI_MEMORY:
+#  if defined(LIBERATE_HAVE_EAI_SYSTEM)
     case EAI_SYSTEM:
+#  endif
       throw std::runtime_error(gai_strerror(err));
+
+#  if defined(LIBERATE_WIN32)
+    case WSANOTINITIALISED:
+      throw std::logic_error("WSA not initialized!");
+#  endif
 
     default:
       throw std::logic_error("Unknown error encountered.");
@@ -120,8 +137,10 @@ resolve_internal(std::set<socket_address> & results, int family,
 } // anonymous namespace
 
 
+// Note: the api instance is unused, but we need an instance for WSASetup() to
+//       have occurred.
 std::set<socket_address>
-resolve(address_type type, std::string const & hostname)
+resolve(api &, address_type type, std::string const & hostname)
 {
   // Validate input & set hints
   if (hostname.empty()) {

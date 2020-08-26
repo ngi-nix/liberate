@@ -53,7 +53,7 @@ namespace liberate::net {
  */
 LIBERATE_API
 std::set<socket_address>
-resolve(address_type type, std::string const & hostname);
+resolve(api & api, address_type type, std::string const & hostname);
 
 } // namespace liberate::net
 
