@@ -3,7 +3,7 @@
  *
  * Author(s): Jens Finkhaeuser <jens@finkhaeuser.de>
  *
- * Copyright (c) 2020 Jens Finkhaeuser.
+ * Copyright (c) 2019-2020 Jens Finkhaeuser.
  *
  * This software is licensed under the terms of the GNU GPLv3 for personal,
  * educational and non-profit use. For all other uses, alternative license
@@ -17,30 +17,19 @@
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE.
  **/
-#include <iostream>
+#ifndef LIBERATE_TEST_ENV_H
+#define LIBERATE_TEST_ENV_H
 
 #include <gtest/gtest.h>
 
-#include "env.h"
-
 #include <liberate.h>
 
-TestEnvironment * test_env = nullptr;
-
-int main(int argc, char **argv)
+class TestEnvironment : public testing::Environment
 {
-  std::cout << liberate::copyright_string() << std::endl;
+public:
+  liberate::api api;
+};
 
-  try {
-    test_env = new TestEnvironment();
-  } catch (std::exception const & ex) {
-    std::cerr << ex.what() << std::endl;
-    return 1;
-  }
+extern TestEnvironment * test_env;
 
-
-  // Ownership passes to gtest here.
-  ::testing::AddGlobalTestEnvironment(test_env);
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
+#endif // guard
