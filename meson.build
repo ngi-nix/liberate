@@ -157,32 +157,22 @@ conf_data.set_quoted('LIBERATE_PACKAGE_URL', 'https://gitlab.com/interpeer/liber
 conf_data.set('LIBERATE_BIGENDIAN', host_machine.endian() == 'big')
 
 ### Headers
-if compiler.has_header('arpa' / 'inet.h')
-  conf_data.set('LIBERATE_HAVE_ARPA_INET_H', true)
-endif
-if compiler.has_header('netinet' / 'in.h')
-  conf_data.set('LIBERATE_HAVE_NETINET_IN_H', true)
-endif
-if compiler.has_header('linux' / 'un.h')
-  conf_data.set('LIBERATE_HAVE_LINUX_UN_H', true)
-endif
-if compiler.has_header('sys' / 'un.h')
-  conf_data.set('LIBERATE_HAVE_SYS_UN_H', true)
-endif
-if compiler.has_header('sys' / 'socket.h')
-  conf_data.set('LIBERATE_HAVE_SYS_SOCKET_H', true)
-endif
-if compiler.has_header('winsock2.h')
-  conf_data.set('LIBERATE_HAVE_WINSOCK2_H', true)
-endif
-if compiler.has_header('ws2tcpip.h')
-  conf_data.set('LIBERATE_HAVE_WS2TCPIP_H', true)
-endif
-have_afunix = false
-if compiler.has_header('afunix.h')
-  conf_data.set('LIBERATE_HAVE_AFUNIX_H', true)
-  have_afunix = true
-endif
+conf_data.set('LIBERATE_HAVE_ARPA_INET_H',
+  compiler.has_header('arpa' / 'inet.h'))
+conf_data.set('LIBERATE_HAVE_NETINET_IN_H',
+  compiler.has_header('netinet' / 'in.h'))
+conf_data.set('LIBERATE_HAVE_LINUX_UN_H',
+  compiler.has_header('linux' / 'un.h'))
+conf_data.set('LIBERATE_HAVE_SYS_UN_H',
+  compiler.has_header('sys' / 'un.h'))
+conf_data.set('LIBERATE_HAVE_SYS_SOCKET_H',
+  compiler.has_header('sys' / 'socket.h'))
+conf_data.set('LIBERATE_HAVE_WINSOCK2_H',
+  compiler.has_header('winsock2.h'))
+conf_data.set('LIBERATE_HAVE_WS2TCPIP_H',
+  compiler.has_header('ws2tcpip.h'))
+have_afunix = compiler.has_header('afunix.h')
+conf_data.set('LIBERATE_HAVE_AFUNIX_H', have_afunix)
 
 
 ### Types
@@ -212,9 +202,7 @@ int main(int, char**)
   auto e = strerror_s(buf, sizeof(buf), 0);
 }
 ''', name: 'strerror_s()')
-if have_strerror_s
-  conf_data.set('LIBERATE_HAVE_STRERROR_S', true)
-endif
+conf_data.set('LIBERATE_HAVE_STRERROR_S', have_strerror_s)
 
 have_strerror_r = compiler.compiles('''
 #include <string.h>
@@ -229,9 +217,21 @@ int main(int, char**)
   int e = strerror_r(0, buf, sizeof(buf));
 }
 ''', name: 'strerror_r()')
-if have_strerror_s
-  conf_data.set('LIBERATE_HAVE_STRERROR_R', true)
-endif
+conf_data.set('LIBERATE_HAVE_STRERROR_R', have_strerror_r)
+
+have_getaddrinfo = compiler.compiles('''
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+int main(int, char**)
+{
+  char buf[1];
+  int e = strerror_r(0, buf, sizeof(buf));
+}
+''', name: 'getaddrinfo()')
+conf_data.set('LIBERATE_HAVE_GETADDRINFO', have_getaddrinfo)
+
 
 ### Set values from options
 log_backend = 'LIBERATE_LOG_BACKEND_' + get_option('log_backend').to_upper()
