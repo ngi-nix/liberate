@@ -109,7 +109,7 @@ resolve_internal(std::set<socket_address> & results, int family,
     }
 
     // Parse the address and add it to our list
-    auto addr = socket_address{cur->ai_addr, cur->ai_addrlen};
+    auto addr = socket_address{cur->ai_addr, static_cast<size_t>(cur->ai_addrlen)};
     results.insert(addr);
   }
 #else
