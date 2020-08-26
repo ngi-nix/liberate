@@ -110,7 +110,6 @@ resolve_internal(std::set<socket_address> & results, int family,
 #  endif
 
     default:
-      std::cout << "WSAGetLastError: "<< WSAGetLastError() << std::endl;
       throw std::logic_error("Unknown error encountered.");
       break;
   }
