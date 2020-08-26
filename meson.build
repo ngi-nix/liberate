@@ -258,11 +258,11 @@ endif
 log_deps = []
 log_cpp_args = []
 if log_backend == 'LIBERATE_LOG_BACKEND_PLOG'
-  plog = subproject('plog')
+  plog = subproject('sergiusthebest-plog')
   log_deps = [plog.get_variable('plog_dep')]
   log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_PLOG']
 elif log_backend == 'LIBERATE_LOG_BACKEND_LOGURU'
-  loguru = subproject('loguru')
+  loguru = subproject('emilk-loguru')
   log_deps = [loguru.get_variable('emilk_loguru_dep')]
   log_cpp_args = [define + 'LIBERATE_LOG_BACKEND=LIBERATE_LOG_BACKEND_LOGURU']
 elif log_backend == 'LIBERATE_LOG_BACKEND_SPDLOG'
