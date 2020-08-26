@@ -59,7 +59,7 @@ resolve_internal(std::set<socket_address> & results, int family,
   hints.ai_family = family;
   hints.ai_socktype = 0;
   hints.ai_protocol = 0;
-  hints.ai_flags = AI_ADDRCONFIG;
+  hints.ai_flags = 0;
 #  if defined(HAVE_AI_IDN)
   hints.ai_flags |= AI_IDN;
 #  endif
@@ -72,8 +72,12 @@ resolve_internal(std::set<socket_address> & results, int family,
       break;
 
     case EAI_NONAME: // Just no results
+#  if defined(EAI_NODATA)
     case EAI_NODATA:
+#  endif
+#  if defined(EAI_ADDRFAMILY)
     case EAI_ADDRFAMILY:
+#  endif
     case EAI_SERVICE:
       return;
 
