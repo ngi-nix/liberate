@@ -368,6 +368,7 @@ install_headers(
 
 libsrc = [
   'lib' / 'version.cpp',
+  'lib' / 'liberate.cpp',
   'lib' / 'string' / 'util.cpp',
   'lib' / 'string' / 'utf8.cpp',
   'lib' / 'string' / 'urlencode.cpp',
