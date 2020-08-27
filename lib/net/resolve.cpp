@@ -33,6 +33,7 @@
 #endif
 
 #include <liberate/net/resolve.h>
+#include <liberate/sys/error.h>
 
 #include "../macros.h"
 
@@ -99,10 +100,11 @@ resolve_internal(std::set<socket_address> & results, int family,
     case EAI_AGAIN:
     case EAI_FAIL:
     case EAI_MEMORY:
+      throw std::runtime_error(gai_strerror(err));
 #  if defined(LIBERATE_HAVE_EAI_SYSTEM)
     case EAI_SYSTEM:
+      throw std::runtime_error(sys::error_message(sys::error_code()));
 #  endif
-      throw std::runtime_error(gai_strerror(err));
 
 #  if defined(LIBERATE_WIN32)
     case WSANOTINITIALISED:
