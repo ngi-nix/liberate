@@ -46,6 +46,8 @@
 /*****************************************************************************
  * Symbols
  **/
+#mesondefine LIBERATE_HAVE_STRERROR_S
+#mesondefine LIBERATE_HAVE_STRERROR_R
 #mesondefine LIBERATE_HAVE_GETADDRINFO
 #mesondefine LIBERATE_HAVE_AI_IDN
 #mesondefine LIBERATE_HAVE_EAI_ADDRFAMILY
