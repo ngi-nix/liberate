@@ -27,6 +27,7 @@
 #if defined(LIBERATE_POSIX)
 #  include <string.h>
 #else
+#  include "../net/netincludes.h"
 #  include <liberate/string/utf8.h>
 #endif
 
