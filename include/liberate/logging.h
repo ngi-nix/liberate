@@ -26,8 +26,9 @@
 
 #include <liberate.h>
 
+#include <liberate/sys/error.h>
+
 #include <sstream>
-#include <ios>
 
 #if defined(LIBERATE_IS_BUILDING) && LIBERATE_IS_BUILDING > 0
 #include <build-config.h>
@@ -44,54 +45,6 @@
 #if !defined(LIBERATE_LOG_BACKEND)
 #define LIBERATE_LOG_BACKEND LIBERATE_LOG_BACKEND_STDERR
 #endif
-
-/**
- * Generate error message string from platform error code.
- */
-#if defined(LIBERATE_POSIX)
-
-#include <string.h>
-
-namespace liberate {
-
-inline std::string
-error_message(int code)
-{
-  std::stringstream msg;
-  msg << "[0x" << std::hex << code << std::dec << " (" << code << ")] "
-    << ::strerror(code);
-  return msg.str();
-}
-
-} // namespace liberate
-
-#else // LIBERATE_POSIX/LIBERATE_WIN32
-
-#include <liberate/string/utf8.h>
-
-namespace liberate {
-
-inline std::string
-error_message(int code)
-{
-  TCHAR * errmsg = NULL;
-  FormatMessageW(
-      FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_IGNORE_INSERTS,
-      NULL, code,
-      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-      (LPWSTR) &errmsg, 0, NULL);
-
-  std::stringstream msg;
-  msg << "[0x" << std::hex << code << std::dec << " (" << code << ")] "
-      << ::liberate::string::to_utf8(errmsg);
-
-  LocalFree(errmsg);
-  return msg.str();
-}
-
-} // namespace liberate
-
-#endif // LIBERATE_WIN32
 
 /**
  * Backends
@@ -197,14 +150,8 @@ error_message(int code)
 /**
  * Error logging macros
  */
-#define LIBLOG_ERR(code, message) LIBLOG_ERROR(message << " // " << liberate::error_message(code))
-
-#if defined(LIBERATE_POSIX)
-#define LIBLOG_ERRNO(message) LIBLOG_ERR(errno, message)
-#else
-#define LIBLOG_ERRNO(message) LIBLOG_ERR(GetLastError(), message)
-#endif
-
+#define LIBLOG_ERR(code, message) LIBLOG_ERROR(message << " // " << liberate::sys::error_message(code))
+#define LIBLOG_ERRNO(message) LIBLOG_ERR(liberate::sys::error_code(), message);
 #define LIBLOG_EXC(exc, message) LIBLOG_ERROR(message << " // " << (exc.what()))
 
 #endif // guard
