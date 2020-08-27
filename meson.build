@@ -362,6 +362,12 @@ install_headers(
 )
 
 install_headers(
+  'include' / 'liberate' / 'sys' / 'error.h',
+
+  subdir: 'liberate' / 'sys',
+)
+
+install_headers(
   'include' / 'liberate' / 'net' / 'address_type.h',
   'include' / 'liberate' / 'net' / 'socket_address.h',
   'include' / 'liberate' / 'net' / 'network.h',
@@ -402,6 +408,7 @@ libsrc = [
   'lib' / 'string' / 'urlencode.cpp',
   'lib' / 'fs' / 'path.cpp',
   'lib' / 'fs' / 'tmp.cpp',
+  'lib' / 'sys' / 'error.cpp',
   'lib' / 'net' / 'cidr.cpp',
   'lib' / 'net' / 'socket_address.cpp',
   'lib' / 'net' / 'network.cpp',
