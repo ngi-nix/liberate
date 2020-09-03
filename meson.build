@@ -398,6 +398,12 @@ install_headers(
   subdir: 'liberate' / 'serialization',
 )
 
+install_headers(
+  'include' / 'liberate' / 'concurrency' / 'concurrent_queue.h',
+
+  subdir: 'liberate' / 'concurrency',
+)
+
 
 
 libsrc = [

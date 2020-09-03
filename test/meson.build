@@ -36,6 +36,7 @@ if not meson.is_subproject()
     'types' / 'type_traits.cpp',
     'serialization' / 'integer.cpp',
     'serialization' / 'varint.cpp',
+    'concurrency' / 'concurrent_queue.cpp',
     'runner.cpp',
   ]
 
