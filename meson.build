@@ -297,6 +297,12 @@ main_build_dir = declare_dependency(
 )
 
 ##############################################################################
+# Dependencies
+threads = dependency('threads', required: true)
+
+deps = [threads]
+
+##############################################################################
 # Meson Wrap Dependencies
 define = '-D'
 if compiler_id == 'msvc'
@@ -400,6 +406,7 @@ install_headers(
 
 install_headers(
   'include' / 'liberate' / 'concurrency' / 'concurrent_queue.h',
+  'include' / 'liberate' / 'concurrency' / 'tasklet.h',
 
   subdir: 'liberate' / 'concurrency',
 )
@@ -421,12 +428,13 @@ libsrc = [
   'lib' / 'net' / 'url.cpp',
   'lib' / 'net' / 'ip.cpp',
   'lib' / 'net' / 'resolve.cpp',
+  'lib' / 'concurrency' / 'tasklet.cpp',
 ]
 
 
 lib = library('erate', libsrc,
     include_directories: [includes],
-    dependencies: log_deps,
+    dependencies: deps + log_deps,
     link_args: link_args,
     cpp_args: cpp_lib_is_building + log_cpp_args,
     version: LIB_VERSION,
@@ -435,7 +443,7 @@ lib = library('erate', libsrc,
 
 liberate_dep = declare_dependency(
     include_directories: [includes],
-    dependencies: log_deps,
+    dependencies: deps + log_deps,
     compile_args: log_cpp_args,
     link_with: [lib],
     link_args: link_args,
