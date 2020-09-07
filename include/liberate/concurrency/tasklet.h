@@ -64,7 +64,7 @@ public:
    * Bundle condition variable and mutex into one. This way, they cannot be
    * provided separately.
    */
-  struct sleep_condition
+  struct LIBERATE_API sleep_condition
   {
     std::condition_variable condition;
     std::mutex              mutex;
@@ -73,7 +73,7 @@ public:
   /**
    * The thread context. This is passed to the task function (below).
    */
-  struct context
+  struct LIBERATE_API context
   {
     // Gets set or unset by tasklet functions. Can also be used in the
     // task_function to determine whether to exit the thread loop.
