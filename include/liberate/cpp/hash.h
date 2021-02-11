@@ -88,6 +88,25 @@ multi_hash(T0 const & t0, Ts && ... ts)
 }
 
 
+/**
+ * Hash a range of T
+ **/
+template <typename iterT>
+inline std::size_t
+range_hash(iterT const & begin, iterT const & end)
+{
+  iterT cur = begin;
+  std::size_t hash = 0;
+
+  std::hash<typename std::iterator_traits<iterT>::value_type> hasher;
+  for ( ; cur != end ; ++cur) {
+    hash_combine(hash, hasher(*cur));
+  }
+
+  return hash;
+}
+
+
 } // namespace liberate::cpp
 
 #endif // guard

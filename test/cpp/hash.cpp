@@ -116,3 +116,41 @@ TEST(CppHash, multi_hash_custom_type_indirect)
 
   ASSERT_EQ(stdresult, result);
 }
+
+
+
+TEST(CppHash, range_hash_iterators)
+{
+  std::string a{"hello"};
+  std::string b{"world"};
+
+  using namespace liberate::cpp;
+  auto ha = range_hash(a.begin(), a.end());
+  auto hb = range_hash(b.begin(), b.end());
+
+  ASSERT_NE(ha, hb);
+
+  std::string c{"hello"};
+  auto hc = range_hash(c.begin(), c.end());
+  ASSERT_EQ(ha, hc);
+}
+
+
+TEST(CppHash, range_hash_pointers)
+{
+  std::string a{"hello"};
+  std::string b{"world"};
+
+  using namespace liberate::cpp;
+  char const * ptr = a.c_str();
+  auto ha = range_hash(ptr, ptr + a.size());
+  ptr = b.c_str();
+  auto hb = range_hash(ptr, ptr + b.size());
+
+  ASSERT_NE(ha, hb);
+
+  std::string c{"hello"};
+  ptr = c.c_str();
+  auto hc = range_hash(ptr, ptr + c.size());
+  ASSERT_EQ(ha, hc);
+}
