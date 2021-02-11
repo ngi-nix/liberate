@@ -25,6 +25,7 @@ if not meson.is_subproject()
     'string' / 'util.cpp',
     'string' / 'utf8.cpp',
     'string' / 'urlencode.cpp',
+    'string' / 'hexencode.cpp',
     'fs' / 'path.cpp',
     'fs' / 'tmp.cpp',
     'net' / 'socket_address.cpp',

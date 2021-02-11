@@ -356,6 +356,7 @@ install_headers(
   'include' / 'liberate' / 'string' / 'util.h',
   'include' / 'liberate' / 'string' / 'utf8.h',
   'include' / 'liberate' / 'string' / 'urlencode.h',
+  'include' / 'liberate' / 'string' / 'hexencode.h',
 
   subdir: 'liberate' / 'string',
 )
@@ -419,6 +420,7 @@ libsrc = [
   'lib' / 'string' / 'util.cpp',
   'lib' / 'string' / 'utf8.cpp',
   'lib' / 'string' / 'urlencode.cpp',
+  'lib' / 'string' / 'hexencode.cpp',
   'lib' / 'fs' / 'path.cpp',
   'lib' / 'fs' / 'tmp.cpp',
   'lib' / 'sys' / 'error.cpp',

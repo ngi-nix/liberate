@@ -19,8 +19,7 @@
  **/
 #include <liberate/string/urlencode.h>
 
-#include <sstream>
-#include <iomanip>
+#include <liberate/string/hexencode.h>
 
 namespace liberate::string {
 
@@ -37,11 +36,7 @@ urlencode(std::string const & input)
     }
 
     ret += "%";
-    std::stringstream s;
-    s.fill('0');
-    s << std::hex << std::uppercase << std::setw(2)
-      << static_cast<int>(static_cast<unsigned char>(ch));
-    ret += s.str();
+    ret += hexencode(&ch, 1, true);
   }
 
   return ret;
@@ -59,11 +54,15 @@ urldecode(std::string const & input)
 
     // Percent-encoded
     if (ch == '%') {
-      auto sub = input.substr(i + 1, 2);
-      unsigned int val = 0;
-      ::sscanf(sub.c_str(), "%x", &val);
-
-      ret += static_cast<char>(val);
+      std::byte val;
+      auto used = hexdecode(&val, 1,
+          reinterpret_cast<std::byte const *>(input.c_str() + i + 1), 2);
+      if (used > 0) {
+        ret += static_cast<char>(val);
+      }
+      else {
+        ret += "?";
+      }
       i += 2;
       continue;
     }
