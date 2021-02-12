@@ -39,6 +39,7 @@ if not meson.is_subproject()
     'serialization' / 'varint.cpp',
     'concurrency' / 'concurrent_queue.cpp',
     'concurrency' / 'tasklet.cpp',
+    'checksum' / 'crc32.cpp',
     'runner.cpp',
   ]
 

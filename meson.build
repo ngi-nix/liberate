@@ -412,6 +412,11 @@ install_headers(
   subdir: 'liberate' / 'concurrency',
 )
 
+install_headers(
+  'include' / 'liberate' / 'checksum' / 'crc32.h',
+
+  subdir: 'liberate' / 'checksum',
+)
 
 
 libsrc = [
