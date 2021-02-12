@@ -27,6 +27,7 @@
 #include <liberate.h>
 
 #include <numeric>
+#include <array>
 
 namespace liberate::checksum {
 
