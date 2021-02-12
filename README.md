@@ -11,12 +11,22 @@ that are shared amongst several other projects:
 
 ## Contents
 
+1. `liberate/checksum/` contains a header-only implementation of CRC32
+  with various polynomials.
+1. `liberate/concurrency` contains some useful classes for concurrent
+  algorithms.
 1. `liberate/cpp/` contains headers that make some C++ language features
   a little more accessible.
+1. `liberate/fs/` contains simple operating system abstractions of file
+  system operations.
 1. `liberate/net/` contains classes for socket and network addresses, and
   a simple URL parser for socket-URLs.
-1. `liberate/fs/` contains filesystem functionality.
 1. `liberate/string/` contains some string utilities.
+1. `liberate/serialization/` contains functions for serializing and
+  deserializing value types.
+1. `liberate/sys/` contains miscellaneous operating system abstractions.
+1. `liberate/types{.h}` contains standard type headers, as well as type
+  definitions such as a variable length integer type.
 1. `liberate/visibility.h` contains library symbol visibility macros that
   can be re-used in other libraries.
 1. `liberate/logging.h` contains logging macros.
