@@ -162,6 +162,46 @@ public:
 };
 
 
+
+/**
+ * We need this construct to specialize for std::byte iterators, but we're
+ * turning it around to have the generic implementation use the
+ * std::fast_uint8_t implementation, which does the actual calculation. So
+ * any value type will be cast to std::fast_uint8_t.
+ */
+template <
+  typename tableT,
+  typename valueT
+>
+struct checksum_step
+{
+  static constexpr auto table = tableT::value;
+
+  static crc32_checksum
+  step(crc32_checksum checksum, valueT value)
+  {
+    return checksum_step<tableT, std::uint_fast8_t>::step(checksum,
+        static_cast<std::uint_fast8_t>(value));
+  }
+};
+
+
+template <
+  typename tableT
+>
+struct checksum_step<tableT, std::uint_fast8_t>
+{
+  static constexpr auto table = tableT::value;
+
+  static crc32_checksum
+  step(crc32_checksum checksum, std::uint_fast8_t value)
+  {
+    return table[(checksum ^ value) & 0xFFu] ^ (checksum >> 8);
+  }
+
+};
+
+
 } // anonymous namespace
 
 /**
@@ -178,9 +218,6 @@ template <
 crc32_checksum
 crc32(iterT begin, iterT end, crc32_checksum initial = CRC32_INITIALIZER)
 {
-  // Memoize lookup table
-  static auto const table = crc32_table_generator<POLYNOMIAL>::value;
-
   auto init = initial == CRC32_INITIALIZER
     ? initial
     : ~initial & CRC32_MASK;
@@ -188,10 +225,10 @@ crc32(iterT begin, iterT end, crc32_checksum initial = CRC32_INITIALIZER)
   // Calculate checksum
   return CRC32_MASK &
     ~std::accumulate(begin, end, init,
-        [](crc32_checksum checksum, std::uint_fast8_t value) -> crc32_checksum
-        {
-          return table[(checksum ^ value) & 0xFFu] ^ (checksum >> 8);
-        }
+        checksum_step<
+          crc32_table_generator<POLYNOMIAL>,
+          typename std::iterator_traits<iterT>::value_type
+        >::step
     );
 }
 

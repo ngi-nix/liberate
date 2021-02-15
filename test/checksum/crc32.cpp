@@ -188,3 +188,26 @@ TEST(ChecksumCRC32, crc32q)
   auto crc = crc32<CRC32Q>(s.begin(), s.end());
   ASSERT_EQ(crc, crc32_checksum{0x6a001b25uL});
 }
+
+
+
+TEST(ChecksumCRC32, byte_buffer)
+{
+  using namespace liberate::checksum;
+
+  // Byte buffer
+  std::byte buf[] = {
+    std::byte{0xde}, std::byte{0xad}, std::byte{0xd0}, std::byte{0x0d},
+  };
+
+  auto crc = crc32<CRC32>(buf, buf + sizeof(buf));
+  ASSERT_EQ(crc, crc32_checksum{0xc9e66627uL});
+
+  // Double check against char buf
+  char buf2[] = {
+    '\xde', '\xad', '\xd0', '\x0d',
+  };
+
+  auto crc2 = crc32<CRC32>(buf2, buf2 + sizeof(buf2));
+  ASSERT_EQ(crc2, crc32_checksum{0xc9e66627uL});
+}
