@@ -69,7 +69,29 @@ struct comparison_operators
   }
 };
 
-
 } // namespace liberate::cpp
+
+/**
+ * Supplement comparison operators as free functions for types that already
+ * define == and <.
+ */
+#define LIBERATE_MAKE_COMPARABLE(thetype) \
+    inline bool operator!=(thetype const & first, thetype const & second) \
+    { \
+      return !(first == second); \
+    } \
+    inline bool operator>(thetype const & first, thetype const & second) \
+    { \
+      return second < first; \
+    } \
+    inline bool operator>=(thetype const & first, thetype const & second) \
+    { \
+      return !(first < second); \
+    } \
+    inline bool operator<=(thetype const & first, thetype const & second) \
+    { \
+      return !(second < first); \
+    }
+
 
 #endif // guard
