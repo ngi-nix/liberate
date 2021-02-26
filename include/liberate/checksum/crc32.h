@@ -35,6 +35,7 @@ namespace liberate::checksum {
  * Type holding a crc32 checksum, and initializer value.
  */
 using crc32_checksum = std::uint_fast32_t;
+using crc32_serialize = uint32_t; // For size estimation
 
 // Clip the initalizer value to 32 bits.
 constexpr crc32_checksum CRC32_MASK = ~crc32_checksum{0} & crc32_checksum{0xFFFFFFFFuL};
