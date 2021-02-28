@@ -140,3 +140,38 @@ TEST(SerializationVarint, deserialize_from_byte)
   ASSERT_EQ(result, 127_var);
 }
 
+
+
+TEST(SerializationVarint, deserialize_buffer_too_small)
+{
+  using namespace liberate::types::literals;
+  using namespace liberate::types;
+  using namespace liberate::serialization;
+
+  uint8_t in[] = { 0x87, 0x87 };
+
+  varint result;
+  auto read = deserialize_varint(result, in, sizeof(in));
+
+  ASSERT_EQ(read, 0);
+}
+
+
+TEST(SerializationVarint, serialize_buffer_too_small)
+{
+  using namespace liberate::types::literals;
+  using namespace liberate::types;
+  using namespace liberate::serialization;
+
+  uint8_t out[2] = { 0 };
+
+  auto test = 0x01020304_var;
+
+  // The following is not enabled.
+  // auto written = serialize_int(&out[0], sizeof(out), test);
+
+  // This, however, should work.
+  auto written = serialize_varint(&out[0], sizeof(out), test);
+
+  ASSERT_EQ(written, 0);
+}

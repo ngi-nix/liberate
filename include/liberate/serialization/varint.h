@@ -26,7 +26,7 @@
 
 #include <liberate.h>
 
-#include <string.h>
+#include <cstring>
 
 #include <type_traits>
 
@@ -82,11 +82,17 @@ serialize_varint(outT * output, std::size_t output_length, ::liberate::types::va
   outT buf[buf_size];
 
   // Start at the end
-  std::size_t offset = sizeof(buf) - 1;
+  ssize_t offset = sizeof(buf) - 1;
   buf[offset] = static_cast<outT>(input & 127);
   while (input >>= 7) {
-    buf[--offset] = static_cast<outT>(128) | static_cast<outT>(--input & 127);
+    --offset;
+    if (offset < 0) {
+      // Ran out of room
+      return 0;
+    }
+    buf[offset] = static_cast<outT>(128) | static_cast<outT>(--input & 127);
   }
+
   std::size_t written = sizeof(buf) - offset;
 
   // Unfortunately, we can only check whether the output buffer is large enough
@@ -138,13 +144,13 @@ deserialize_varint(::liberate::types::varint & value, inT const * input, std::si
       // Overflow
       return 0;
     }
-    ++buf;
+    c = *buf++;
+    val = (val << 7) + static_cast<varint_base>((c & static_cast<inT>(127)));
+
     if (static_cast<std::size_t>(buf - input) >= input_length) {
       // Not done decoding, but the buffer ends
       return 0;
     }
-    c = *buf;
-    val = (val << 7) + static_cast<varint_base>((c & static_cast<inT>(127)));
   }
 
   value = liberate::types::varint{val};
