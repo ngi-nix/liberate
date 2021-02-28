@@ -138,7 +138,12 @@ deserialize_varint(::liberate::types::varint & value, inT const * input, std::si
       // Overflow
       return 0;
     }
-    c = *buf++;
+    ++buf;
+    if (static_cast<std::size_t>(buf - input) >= input_length) {
+      // Not done decoding, but the buffer ends
+      return 0;
+    }
+    c = *buf;
     val = (val << 7) + static_cast<varint_base>((c & static_cast<inT>(127)));
   }
 
