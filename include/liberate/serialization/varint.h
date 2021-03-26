@@ -51,6 +51,13 @@ constexpr std::size_t ceil(double input)
 } // namespace detail
 
 /**
+ * Maximum serialized size of a varint.
+ */
+constexpr std::size_t const VARINT_MAX_BUFSIZE = detail::ceil(
+    double{sizeof(liberate::types::varint) * 8} / 7
+);
+
+/**
  * Serialize to buffer.
  *
  * The buffer is defined by a pointer and a size. The input is an
@@ -72,14 +79,11 @@ serialize_varint(outT * output, std::size_t output_length, ::liberate::types::va
     return 0;
   }
 
-  constexpr std::size_t const input_size = sizeof(liberate::types::varint);
-
   auto input = static_cast<liberate::types::varint_base>(value);
 
   // We require a buffer of at least enough size to store the largest possible
   // value in 7 bits instead of 8.
-  constexpr std::size_t const buf_size = detail::ceil(double{input_size * 8} / 7);
-  outT buf[buf_size];
+  outT buf[VARINT_MAX_BUFSIZE];
 
   // Start at the end
   ssize_t offset = sizeof(buf) - 1;
