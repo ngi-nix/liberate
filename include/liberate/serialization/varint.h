@@ -58,6 +58,21 @@ constexpr std::size_t const VARINT_MAX_BUFSIZE = detail::ceil(
 );
 
 /**
+ * Actual serialized size of a varint
+ */
+inline std::size_t
+serialized_size(::liberate::types::varint const & value)
+{
+  auto input = static_cast<liberate::types::varint_base>(value);
+  std::size_t result = 1;
+
+  while (input >>= 7) {
+    ++result;
+  }
+  return result;
+}
+
+/**
  * Serialize to buffer.
  *
  * The buffer is defined by a pointer and a size. The input is an
