@@ -94,35 +94,28 @@ serialize_varint(outT * output, std::size_t output_length, ::liberate::types::va
     return 0;
   }
 
+  // We require a buffer of a particular size; if the output buffer is large
+  // enough, we can use it directly.
+  auto required = serialized_size(value);
+  if (output_length < required) {
+    return 0;
+  }
+
   auto input = static_cast<liberate::types::varint_base>(value);
 
-  // We require a buffer of at least enough size to store the largest possible
-  // value in 7 bits instead of 8.
-  outT buf[VARINT_MAX_BUFSIZE];
-
   // Start at the end
-  ssize_t offset = sizeof(buf) - 1;
-  buf[offset] = static_cast<outT>(input & 127);
+  ssize_t offset = required - 1;
+  output[offset] = static_cast<outT>(input & 127);
   while (input >>= 7) {
     --offset;
     if (offset < 0) {
       // Ran out of room
       return 0;
     }
-    buf[offset] = static_cast<outT>(128) | static_cast<outT>(--input & 127);
+    output[offset] = static_cast<outT>(128) | static_cast<outT>(--input & 127);
   }
 
-  std::size_t written = sizeof(buf) - offset;
-
-  // Unfortunately, we can only check whether the output buffer is large enough
-  // at this point.
-  if (written > output_length) {
-    return 0;
-  }
-
-  // Copy over.
-  ::memcpy(output, buf + offset, written);
-  return written;
+  return required;
 }
 
 

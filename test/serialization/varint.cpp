@@ -171,7 +171,33 @@ TEST(SerializationVarint, serialize_buffer_too_small)
   // auto written = serialize_int(&out[0], sizeof(out), test);
 
   // This, however, should work.
-  auto written = serialize_varint(&out[0], sizeof(out), test);
+  auto written = serialize_varint(out, sizeof(out), test);
 
   ASSERT_EQ(written, 0);
+}
+
+
+TEST(SerializationVarint, buffer_excessively_large)
+{
+  using namespace liberate::types::literals;
+  using namespace liberate::types;
+  using namespace liberate::serialization;
+
+  uint8_t buf[30] = { 0 };
+
+  auto test = 0x1a_var;
+
+  // Write to buffer. We would expect it to be a single byte large, and
+  // that byte to sit in the first byte of the buffer.
+  auto written = serialize_varint(buf, sizeof(buf), test);
+  ASSERT_EQ(written, 1);
+  ASSERT_EQ(buf[0], 0x1a);
+  ASSERT_EQ(buf[1], 0x00);
+  ASSERT_EQ(buf[29], 0x00);
+
+  // Deserialization of the same large buffer must also work as expected.
+  varint result;
+  auto read = deserialize_varint(result, buf, sizeof(buf));
+  ASSERT_EQ(read, 1);
+  ASSERT_EQ(result, test);
 }
