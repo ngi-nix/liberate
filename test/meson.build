@@ -40,6 +40,7 @@ if not meson.is_subproject()
     'concurrency' / 'concurrent_queue.cpp',
     'concurrency' / 'tasklet.cpp',
     'checksum' / 'crc32.cpp',
+    'timeout' / 'exponential_backoff.cpp',
     'runner.cpp',
   ]
 

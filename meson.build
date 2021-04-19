@@ -418,6 +418,19 @@ install_headers(
   subdir: 'liberate' / 'checksum',
 )
 
+install_headers(
+  'include' / 'liberate' / 'random' / 'unsafe_bits.h',
+
+  subdir: 'liberate' / 'random',
+)
+
+install_headers(
+  'include' / 'liberate' / 'timeout' / 'exponential_backoff.h',
+
+  subdir: 'liberate' / 'timeout',
+)
+
+
 
 libsrc = [
   'lib' / 'version.cpp',
