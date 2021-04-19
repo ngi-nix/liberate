@@ -26,7 +26,7 @@
 
 constexpr std::size_t ITERATIONS = 100;
 
-TEST(SupportExponentialBackoff, simple_multiplier)
+TEST(TimeoutExponentialBackoff, simple_multiplier)
 {
   // Basically validate the multiplier generation by ensuring it only produces
   // numbers between 0 and 1.
@@ -45,7 +45,7 @@ TEST(SupportExponentialBackoff, simple_multiplier)
 }
 
 
-TEST(SupportExponentialBackoff, larger_multiplier)
+TEST(TimeoutExponentialBackoff, larger_multiplier)
 {
   // Basically validate the multiplier generation by ensuring it only produces
   // numbers between 0 and 7.
@@ -64,7 +64,7 @@ TEST(SupportExponentialBackoff, larger_multiplier)
 }
 
 
-TEST(SupportExponentialBackoff, backoff)
+TEST(TimeoutExponentialBackoff, backoff)
 {
   // Same as large_multiplier above, but with an actual backoff value.
   std::map<int, std::size_t> results;
@@ -79,4 +79,12 @@ TEST(SupportExponentialBackoff, backoff)
     ASSERT_LE(e.first, 7 * 42);
     // std::cout << e.second << " x " << e.first << std::endl;
   }
+}
+
+
+TEST(TimeoutExponentialBackoff, backoff_zero_collisions)
+{
+  // Special test case: if there are no collisions, we also don't want to wait.
+  auto backoff = liberate::timeout::backoff<int, int{42}>(0);
+  ASSERT_EQ(0, backoff);
 }
