@@ -55,13 +55,12 @@ backoff_multiplier(std::size_t const & collisions)
  * the number of collisions, and returns the actual backoff value.
  */
 template <
-  typename backoffT,
-  backoffT BACKOFF
+  typename backoffT
 >
 inline backoffT
-backoff(std::size_t const & collisions)
+backoff(backoffT const & backoff, std::size_t const & collisions)
 {
-  return BACKOFF * backoff_multiplier(collisions);
+  return backoff * backoff_multiplier(collisions);
 }
 
 } // namespace liberate::timeout

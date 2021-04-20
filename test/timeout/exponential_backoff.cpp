@@ -69,7 +69,7 @@ TEST(TimeoutExponentialBackoff, backoff)
   // Same as large_multiplier above, but with an actual backoff value.
   std::map<int, std::size_t> results;
   for (std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-    results[liberate::timeout::backoff<int, int{42}>(3)] += 1;
+    results[liberate::timeout::backoff(42, 3)] += 1;
   }
 
   // We can have at most eight different results
@@ -85,6 +85,6 @@ TEST(TimeoutExponentialBackoff, backoff)
 TEST(TimeoutExponentialBackoff, backoff_zero_collisions)
 {
   // Special test case: if there are no collisions, we also don't want to wait.
-  auto backoff = liberate::timeout::backoff<int, int{42}>(0);
+  auto backoff = liberate::timeout::backoff(42, 0);
   ASSERT_EQ(0, backoff);
 }
