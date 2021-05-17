@@ -41,6 +41,7 @@
  **/
 #mesondefine LIBERATE_HAVE_CHAR8_T
 #mesondefine LIBERATE_HAVE_WCHAR_T
+#mesondefine LIBERATE_HAVE_STD_BYTE
 
 
 /*****************************************************************************

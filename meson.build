@@ -191,6 +191,10 @@ wchar_size = compiler.sizeof('wchar_t')
 if wchar_size > 0
   conf_data.set('LIBERATE_HAVE_WCHAR_T', true)
 endif
+stdbyte_size = compiler.sizeof('std::byte', prefix: '#include <cstddef>')
+if stdbyte_size > 0
+  conf_data.set('LIBERATE_HAVE_STD_BYTE', true)
+endif
 
 have_strerror_s = compiler.compiles('''
 #include <string.h>
@@ -348,6 +352,7 @@ install_headers(
 install_headers(
   'include' / 'liberate' / 'types' / 'varint.h',
   'include' / 'liberate' / 'types' / 'type_traits.h',
+  'include' / 'liberate' / 'types' / 'byte.h',
 
   subdir: 'liberate' / 'types',
 )
