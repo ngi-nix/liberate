@@ -38,6 +38,7 @@
 // *** Own includes
 #include <liberate/cpp/operators/comparison.h>
 #include <liberate/net/address_type.h>
+#include <liberate/types/byte.h>
 
 namespace liberate::net {
 
@@ -68,7 +69,7 @@ union address_data
 #endif // LIBERATE_IS_BUILDING
   // For the padding/dummy, see e.g.
   // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms740504(v=vs.85)
-  std::byte         _dummy[128];
+  ::liberate::types::byte _dummy[128];
 };
 
 } // namespace detail

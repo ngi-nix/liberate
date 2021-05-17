@@ -28,27 +28,29 @@ namespace net = liberate::net;
 
 namespace {
 
+using byte = liberate::types::byte;
+
 // Two packets grabbed with wireshark
-constexpr std::byte const ipv4_buf[] = {
-    std::byte{0x45}, std::byte{0x00}, std::byte{0x00}, std::byte{0x28},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x40}, std::byte{0x00},
-    std::byte{0x40}, std::byte{0x06}, std::byte{0x3c}, std::byte{0xce},
-    std::byte{0x7f}, std::byte{0x00}, std::byte{0x00}, std::byte{0x01},
-    std::byte{0x7f}, std::byte{0x00}, std::byte{0x00}, std::byte{0x01}
+constexpr byte const ipv4_buf[] = {
+    byte{0x45}, byte{0x00}, byte{0x00}, byte{0x28},
+    byte{0x00}, byte{0x00}, byte{0x40}, byte{0x00},
+    byte{0x40}, byte{0x06}, byte{0x3c}, byte{0xce},
+    byte{0x7f}, byte{0x00}, byte{0x00}, byte{0x01},
+    byte{0x7f}, byte{0x00}, byte{0x00}, byte{0x01}
   };
 
 
-constexpr std::byte const ipv6_buf[] = {
-    std::byte{0x60}, std::byte{0x03}, std::byte{0x9b}, std::byte{0xe1},
-    std::byte{0x00}, std::byte{0x14}, std::byte{0x06}, std::byte{0x40},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x01},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00},
-    std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x01}
+constexpr byte const ipv6_buf[] = {
+    byte{0x60}, byte{0x03}, byte{0x9b}, byte{0xe1},
+    byte{0x00}, byte{0x14}, byte{0x06}, byte{0x40},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x00},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x00},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x00},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x01},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x00},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x00},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x00},
+    byte{0x00}, byte{0x00}, byte{0x00}, byte{0x01}
   };
 
 } // anonymous namespace
@@ -128,6 +130,6 @@ TEST(IP, parse_bad_packet)
 {
   net::socket_address addr;
   auto res = net::parse_source_address(addr,
-      reinterpret_cast<std::byte const *>("Hello, world!"), 13);
+      reinterpret_cast<byte const *>("Hello, world!"), 13);
   ASSERT_FALSE(res);
 }

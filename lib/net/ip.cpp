@@ -28,7 +28,7 @@ namespace {
 
 inline bool
 parse_address_helper(socket_address * source, socket_address * dest,
-    std::byte const * buffer, size_t bufsize)
+    ::liberate::types::byte const * buffer, size_t bufsize)
 {
   // Need to read the protocol bits at minimum
   if (bufsize < 1) {
@@ -36,7 +36,7 @@ parse_address_helper(socket_address * source, socket_address * dest,
   }
 
   // Read protocol bits
-  uint8_t proto = static_cast<uint8_t>(buffer[0] & std::byte(0xf0)) >> 4;
+  uint8_t proto = static_cast<uint8_t>(buffer[0] & ::liberate::types::byte(0xf0)) >> 4;
 
   // IPv4
   if (4 == proto) {
@@ -100,7 +100,7 @@ parse_address_helper(socket_address * source, socket_address * dest,
 
 bool
 parse_addresses(socket_address & source, socket_address & dest,
-    std::byte const * buffer, size_t bufsize)
+    ::liberate::types::byte const * buffer, size_t bufsize)
 {
   return parse_address_helper(&source, &dest, buffer, bufsize);
 }
@@ -108,7 +108,7 @@ parse_addresses(socket_address & source, socket_address & dest,
 
 bool
 parse_source_address(socket_address & source,
-    std::byte const * buffer, size_t bufsize)
+    ::liberate::types::byte const * buffer, size_t bufsize)
 {
   return parse_address_helper(&source, nullptr, buffer, bufsize);
 }
@@ -116,7 +116,7 @@ parse_source_address(socket_address & source,
 
 bool
 parse_dest_address(socket_address & dest,
-    std::byte const * buffer, size_t bufsize)
+    ::liberate::types::byte const * buffer, size_t bufsize)
 {
   return parse_address_helper(nullptr, &dest, buffer, bufsize);
 }

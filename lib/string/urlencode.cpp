@@ -54,9 +54,9 @@ urldecode(std::string const & input)
 
     // Percent-encoded
     if (ch == '%') {
-      std::byte val;
+      ::liberate::types::byte val;
       auto used = hexdecode(&val, 1,
-          reinterpret_cast<std::byte const *>(input.c_str() + i + 1), 2);
+          reinterpret_cast<::liberate::types::byte const *>(input.c_str() + i + 1), 2);
       if (used > 0) {
         ret += static_cast<char>(val);
       }

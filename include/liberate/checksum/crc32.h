@@ -165,7 +165,7 @@ public:
 
 
 /**
- * We need this construct to specialize for std::byte iterators, but we're
+ * We need this construct to specialize for byte iterators, but we're
  * turning it around to have the generic implementation use the
  * std::fast_uint8_t implementation, which does the actual calculation. So
  * any value type will be cast to std::fast_uint8_t.

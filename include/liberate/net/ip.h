@@ -27,6 +27,7 @@
 #include <liberate.h>
 
 #include <liberate/net/socket_address.h>
+#include <liberate/types/byte.h>
 
 namespace liberate::net {
 
@@ -42,15 +43,15 @@ namespace liberate::net {
  */
 LIBERATE_API bool
 parse_addresses(socket_address & source, socket_address & dest,
-    std::byte const * buffer, size_t bufsize);
+    ::liberate::types::byte const * buffer, size_t bufsize);
 
 LIBERATE_API bool
 parse_source_address(socket_address & source,
-    std::byte const * buffer, size_t bufsize);
+    ::liberate::types::byte const * buffer, size_t bufsize);
 
 LIBERATE_API bool
 parse_dest_address(socket_address & dest,
-    std::byte const * buffer, size_t bufsize);
+    ::liberate::types::byte const * buffer, size_t bufsize);
 
 
 } // namespace liberate::net

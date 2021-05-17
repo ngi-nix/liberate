@@ -29,11 +29,12 @@ static const std::string expected{"48656c6c6f2c20776f726c6421"};
 
 TEST(StringHexEncode, encode_raw)
 {
-  std::vector<std::byte> out{out_size};
+  std::vector<::liberate::types::byte> out;
+  out.resize(out_size);
 
   auto used = liberate::string::hexencode(
       &out[0], out.size(),
-      reinterpret_cast<std::byte const *>(plain.c_str()),
+      reinterpret_cast<::liberate::types::byte const *>(plain.c_str()),
       plain_size);
   ASSERT_EQ(used, out_size);
 
@@ -46,11 +47,12 @@ TEST(StringHexEncode, encode_raw)
 
 TEST(StringHexDecode, decode_raw)
 {
-  std::vector<std::byte> out{plain_size};
+  std::vector<::liberate::types::byte> out;
+  out.resize(plain_size);
 
   auto used = liberate::string::hexdecode(
       &out[0], out.size(),
-      reinterpret_cast<std::byte const *>(expected.c_str()),
+      reinterpret_cast<::liberate::types::byte const *>(expected.c_str()),
       out_size);
   ASSERT_EQ(used, plain_size);
 
@@ -72,7 +74,7 @@ TEST(StringHexEncode, encode_char)
 TEST(StringHexEncode, encode_bytes)
 {
   auto result = liberate::string::hexencode(
-      reinterpret_cast<std::byte const *>(plain.c_str()), plain.size());
+      reinterpret_cast<::liberate::types::byte const *>(plain.c_str()), plain.size());
   ASSERT_EQ(result, expected);
 }
 
@@ -94,7 +96,7 @@ TEST(StringHexDecode, decode_char)
 TEST(StringHexDecode, decode_bytes)
 {
   auto result = liberate::string::hexdecode(
-      reinterpret_cast<std::byte const *>(expected.c_str()), expected.size());
+      reinterpret_cast<::liberate::types::byte const *>(expected.c_str()), expected.size());
   ASSERT_EQ(result.size(), plain.size());
 
   for (size_t i = 0 ; i < result.size() ; ++i) {

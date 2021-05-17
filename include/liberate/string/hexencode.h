@@ -26,6 +26,8 @@
 #include <vector>
 #include <string>
 
+#include <liberate/types/byte.h>
+
 namespace liberate::string {
 
 /**
@@ -34,12 +36,14 @@ namespace liberate::string {
  **/
 LIBERATE_API
 size_t
-hexencode(std::byte * output, size_t output_size, std::byte const * input,
+hexencode(::liberate::types::byte * output, size_t output_size,
+    ::liberate::types::byte const * input,
     size_t input_size, bool uppercase = false);
 
 LIBERATE_API
 size_t
-hexdecode(std::byte * output, size_t output_size, std::byte const * input,
+hexdecode(::liberate::types::byte * output, size_t output_size,
+    ::liberate::types::byte const * input,
     size_t input_size);
 
 /**
@@ -51,16 +55,16 @@ hexencode(char const * input, size_t input_size, bool uppercase = false);
 
 LIBERATE_API
 std::string
-hexencode(std::byte const * input, size_t input_size, bool uppercase = false);
+hexencode(::liberate::types::byte const * input, size_t input_size, bool uppercase = false);
 
 
 LIBERATE_API
-std::vector<std::byte>
+std::vector<::liberate::types::byte>
 hexdecode(char const * input, size_t input_size);
 
 LIBERATE_API
-std::vector<std::byte>
-hexdecode(std::byte const * input, size_t input_size);
+std::vector<::liberate::types::byte>
+hexdecode(::liberate::types::byte const * input, size_t input_size);
 
 
 

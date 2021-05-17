@@ -19,26 +19,30 @@
  **/
 #include <liberate/string/hexencode.h>
 
+#include <liberate/logging.h>
+
 namespace liberate::string {
 
 namespace {
 
-static constexpr std::byte hexalpha_lower[] = {
-  std::byte{'0'}, std::byte{'1'}, std::byte{'2'}, std::byte{'3'},
-  std::byte{'4'}, std::byte{'5'}, std::byte{'6'}, std::byte{'7'},
-  std::byte{'8'}, std::byte{'9'}, std::byte{'a'}, std::byte{'b'},
-  std::byte{'c'}, std::byte{'d'}, std::byte{'e'}, std::byte{'f'},
+using byte = ::liberate::types::byte;
+
+static constexpr byte hexalpha_lower[] = {
+  byte{'0'}, byte{'1'}, byte{'2'}, byte{'3'},
+  byte{'4'}, byte{'5'}, byte{'6'}, byte{'7'},
+  byte{'8'}, byte{'9'}, byte{'a'}, byte{'b'},
+  byte{'c'}, byte{'d'}, byte{'e'}, byte{'f'},
 };
 
-static constexpr std::byte hexalpha_upper[] = {
-  std::byte{'0'}, std::byte{'1'}, std::byte{'2'}, std::byte{'3'},
-  std::byte{'4'}, std::byte{'5'}, std::byte{'6'}, std::byte{'7'},
-  std::byte{'8'}, std::byte{'9'}, std::byte{'A'}, std::byte{'B'},
-  std::byte{'D'}, std::byte{'D'}, std::byte{'E'}, std::byte{'F'},
+static constexpr byte hexalpha_upper[] = {
+  byte{'0'}, byte{'1'}, byte{'2'}, byte{'3'},
+  byte{'4'}, byte{'5'}, byte{'6'}, byte{'7'},
+  byte{'8'}, byte{'9'}, byte{'A'}, byte{'B'},
+  byte{'D'}, byte{'D'}, byte{'E'}, byte{'F'},
 };
 
 
-inline int decode_half(std::byte half)
+inline int decode_half(byte half)
 {
   char c = static_cast<char>(half);
   if (c >= '0' && c <= '9') {
@@ -55,16 +59,18 @@ inline int decode_half(std::byte half)
 
 
 inline size_t
-hexencode_impl(std::byte * output, size_t output_size, std::byte const * input,
-    size_t input_size, std::byte const * alphabet, size_t alphabet_size)
+hexencode_impl(byte * output, size_t output_size, byte const * input,
+    size_t input_size, byte const * alphabet, size_t alphabet_size)
 {
   size_t required_size = input_size * 2;
   if (output_size < required_size) {
+    LIBLOG_ERROR("Output size too small; was given " << output_size
+        << " but need " << required_size << " Bytes.");
     return 0;
   }
 
   // Convert
-  std::byte const * cur = input;
+  byte const * cur = input;
   size_t offset = 0;
   for ( ; cur < input + input_size ; ++cur) {
     int val = static_cast<int>(*cur);
@@ -79,7 +85,7 @@ hexencode_impl(std::byte * output, size_t output_size, std::byte const * input,
 
 
 size_t
-hexencode(std::byte * output, size_t output_size, std::byte const * input,
+hexencode(::liberate::types::byte * output, size_t output_size, ::liberate::types::byte const * input,
     size_t input_size, bool uppercase /* = false */)
 {
   return hexencode_impl(output, output_size, input, input_size,
@@ -90,7 +96,7 @@ hexencode(std::byte * output, size_t output_size, std::byte const * input,
 
 
 size_t
-hexdecode(std::byte * output, size_t output_size, std::byte const * input,
+hexdecode(::liberate::types::byte * output, size_t output_size, ::liberate::types::byte const * input,
     size_t input_size)
 {
 
@@ -100,7 +106,7 @@ hexdecode(std::byte * output, size_t output_size, std::byte const * input,
   }
 
   // Convert
-  std::byte const * cur = input;
+  byte const * cur = input;
   size_t offset = 0;
   while (cur < input + input_size) {
     int v1 = decode_half(*cur++);
@@ -108,7 +114,7 @@ hexdecode(std::byte * output, size_t output_size, std::byte const * input,
     int v2 = decode_half(*cur++);
     if (v2 < 0) return 0;
 
-    output[offset++] = static_cast<std::byte>((v1 << 4) + v2);
+    output[offset++] = static_cast<byte>((v1 << 4) + v2);
   }
 
   return offset;
@@ -119,21 +125,21 @@ hexdecode(std::byte * output, size_t output_size, std::byte const * input,
 std::string
 hexencode(char const * input, size_t input_size, bool uppercase /* = false */)
 {
-  return hexencode(reinterpret_cast<std::byte const *>(input), input_size,
+  return hexencode(reinterpret_cast<byte const *>(input), input_size,
       uppercase);
 }
 
 
 
 std::string
-hexencode(std::byte const * input, size_t input_size,
+hexencode(::liberate::types::byte const * input, size_t input_size,
     bool uppercase /* = false */)
 {
   std::vector<std::string::value_type> buf;
   buf.resize(input_size * 2);
 
   auto used = hexencode(
-      reinterpret_cast<std::byte *>(&buf[0]), buf.size(),
+      reinterpret_cast<byte *>(&buf[0]), buf.size(),
       input, input_size,
       uppercase);
   if (used > 0) {
@@ -145,18 +151,18 @@ hexencode(std::byte const * input, size_t input_size,
 
 
 
-std::vector<std::byte>
+std::vector<::liberate::types::byte>
 hexdecode(char const * input, size_t input_size)
 {
-  return hexdecode(reinterpret_cast<std::byte const *>(input), input_size);
+  return hexdecode(reinterpret_cast<byte const *>(input), input_size);
 }
 
 
 
-std::vector<std::byte>
-hexdecode(std::byte const * input, size_t input_size)
+std::vector<::liberate::types::byte>
+hexdecode(::liberate::types::byte const * input, size_t input_size)
 {
-  std::vector<std::byte> buf;
+  std::vector<byte> buf;
   buf.resize(input_size / 2);
 
   auto used = hexdecode(
