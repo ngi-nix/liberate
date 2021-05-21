@@ -98,16 +98,13 @@ socket_address::socket_address()
 
 socket_address::socket_address(void const * buf, size_t len)
 {
-  if (static_cast<size_t>(len) > sizeof(data)) {
-    throw std::invalid_argument("socket_address: input buffer too "
-        "large.");
-  }
+  std::size_t copy_len = std::min(sizeof(data), len);
 
   // Need to zero data.
   ::memset(&data.sa_storage, 0, sizeof(data));
 
   if (nullptr != buf) {
-    ::memcpy(&data.sa_storage, buf, len);
+    ::memcpy(&data.sa_storage, buf, copy_len);
   }
 }
 
