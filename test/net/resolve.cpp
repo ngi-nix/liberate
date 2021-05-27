@@ -54,6 +54,17 @@ TEST(Resolve, localhost_any)
 }
 
 
+TEST(Resolve, localhost_ipv4_with_port)
+{
+  auto result = net::resolve(test_env->api, net::AT_INET4, "localhost:1234");
+  ASSERT_EQ(result.size(), 1);
+  auto addr = *result.begin();
+  ASSERT_EQ(addr.type(), net::AT_INET4);
+  ASSERT_EQ(1234, addr.port());
+  ASSERT_EQ(addr.cidr_str(), "127.0.0.1");
+}
+
+
 TEST(Resolve, test_domain_error)
 {
   // As per specs, domains ending in .test should never be resolvable.

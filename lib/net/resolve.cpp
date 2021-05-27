@@ -59,7 +59,7 @@ struct addrinfo_holder
 
 void
 resolve_internal(std::set<socket_address> & results, int family,
-    std::string const & hostname)
+    std::string const & hostname, uint16_t port)
 {
 #if defined(GETADDRINFO_IS_IMPLEMENTED)
   // Construct hints
@@ -129,6 +129,7 @@ resolve_internal(std::set<socket_address> & results, int family,
 
     // Parse the address and add it to our list
     auto addr = socket_address{cur->ai_addr, static_cast<size_t>(cur->ai_addrlen)};
+    addr.set_port(port);
     results.insert(addr);
   }
 #else
@@ -149,19 +150,28 @@ resolve(api &, address_type type, std::string const & hostname)
     throw std::invalid_argument("Need to provide a hostname.");
   }
 
+  auto lookup_host = hostname;
+  auto sep = lookup_host.find(":");
+  uint16_t port = 0;
+  if (sep != std::string::npos) {
+    lookup_host = hostname.substr(0, sep);
+    auto port_str = hostname.substr(sep + 1);
+    port = std::stoi(port_str);
+  }
+
   std::set<socket_address> results;
   switch (type) {
     case AT_UNSPEC:
-      resolve_internal(results, AF_INET, hostname);
-      resolve_internal(results, AF_INET6, hostname);
+      resolve_internal(results, AF_INET, lookup_host, port);
+      resolve_internal(results, AF_INET6, lookup_host, port);
       break;
 
     case AT_INET4:
-      resolve_internal(results, AF_INET, hostname);
+      resolve_internal(results, AF_INET, lookup_host, port);
       break;
 
     case AT_INET6:
-      resolve_internal(results, AF_INET6, hostname);
+      resolve_internal(results, AF_INET6, lookup_host, port);
       break;
 
     default:
