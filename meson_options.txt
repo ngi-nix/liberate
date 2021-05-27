@@ -1,6 +1,7 @@
-option('log_backend', type: 'string',
+option('log_backend', type: 'combo',
+  choices: ['stderr', 'spdlog', 'loguru', 'plog'],
+  value: 'stderr',
   description: '''The logging backend to use. This option can also be set via
 -DLIBERATE_LOG_BACKEND=`...`. Possible values are `stderr` (the default),
 `spdlog`, `loguru` and `plog`. See README.md for logging detail.''',
-  value: 'stderr',
 )
