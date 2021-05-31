@@ -27,6 +27,7 @@
 
 #include <functional>
 #include <set>
+#include <sstream>
 
 #include <liberate/types.h>
 #include <liberate/net/socket_address.h>
@@ -430,6 +431,16 @@ uint64_t
 network::max_size() const
 {
   return m_impl->get_max();
+}
+
+
+
+std::string
+network::netspec() const
+{
+  std::stringstream s;
+  s << *this;
+  return s.str();
 }
 
 

@@ -112,6 +112,12 @@ public:
   socket_address network_address() const;
   socket_address broadcast_address() const;
 
+  /**
+   * Return a netspec that can be used to create an equivalent network
+   * instance.
+   */
+  std::string netspec() const;
+
 
   /**
    * Returns a new socket_address (with port set to 0) that is part of this

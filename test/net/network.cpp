@@ -129,6 +129,24 @@ TEST_P(NetworkConstruction, construct)
   }
 }
 
+
+TEST_P(NetworkConstruction, reconstruct)
+{
+  using namespace net;
+  auto td = GetParam();
+
+  if (td.throws) {
+    GTEST_SKIP();
+    return;
+  }
+
+  network n{td.netspec};
+  auto spec = n.netspec();
+  network n2{spec}; // Should not throw, because the netspec above worked.
+
+  ASSERT_EQ(n, n2);
+}
+
 INSTANTIATE_TEST_SUITE_P(net, NetworkConstruction,
     testing::ValuesIn(ctor_tests),
     ctor_name);
