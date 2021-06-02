@@ -378,6 +378,42 @@ socket_address::set_port(uint16_t port)
 
 
 bool
+socket_address::is_any() const
+{
+  switch (data.sa_storage.ss_family) {
+    case AF_INET:
+      return data.sa_in.sin_addr.s_addr == ntohl(INADDR_ANY);
+
+    case AF_INET6:
+      return 0 == ::memcmp(&(data.sa_in6.sin6_addr), &in6addr_any,
+          sizeof(in6addr_any));
+
+    default:
+      return false;
+  }
+}
+
+
+
+bool
+socket_address::is_loopback() const
+{
+  switch (data.sa_storage.ss_family) {
+    case AF_INET:
+      return data.sa_in.sin_addr.s_addr == ntohl(INADDR_LOOPBACK);
+
+    case AF_INET6:
+      return 0 == ::memcmp(&(data.sa_in6.sin6_addr), &in6addr_loopback,
+          sizeof(in6addr_any));
+
+    default:
+      return false;
+  }
+}
+
+
+
+bool
 socket_address::is_equal_to(socket_address const & other) const
 {
   // First compare families. It's a bit hard to decide what to return if the

@@ -187,6 +187,14 @@ public:
 
 
   /**
+   * Feature tests. These return false for non-IP addresses, and the appropriate
+   * result if true.
+   */
+  bool is_any() const;
+  bool is_loopback() const;
+
+
+  /**
    * Behave like a value type.
    **/
   socket_address(socket_address const &) = default;

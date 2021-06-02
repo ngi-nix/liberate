@@ -50,25 +50,61 @@ struct parsing_test_data
   std::string         address;
   std::string         expected;
   uint16_t            port;
+  bool                is_any;
+  bool                is_loopback;
 } parsing_tests[] = {
-  { AF_INET,  net::AT_INET4, "192.168.0.1", "192.168.0.1", 12344, },
-  { AF_INET,  net::AT_INET4, "192.168.0.1", "192.168.0.1", 12345, },
+  { AF_INET,  net::AT_INET4, "192.168.0.1", "192.168.0.1", 12344,
+    false, false,
+  },
+  { AF_INET,  net::AT_INET4, "192.168.0.1", "192.168.0.1", 12345,
+    false, false,
+  },
   { AF_INET6, net::AT_INET6, "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
-    "2001:db8:85a3::8a2e:370:7334", 12345, },
+    "2001:db8:85a3::8a2e:370:7334", 12345,
+    false, false,
+  },
   { AF_INET6, net::AT_INET6, "2001:db8:85a3:0:0:8a2e:370:7334",
-    "2001:db8:85a3::8a2e:370:7334", 12345, },
+    "2001:db8:85a3::8a2e:370:7334", 12345,
+    false, false,
+  },
   { AF_INET6, net::AT_INET6, "2001:db8:85a3::8a2e:370:7334",
-    "2001:db8:85a3::8a2e:370:7334", 12344, },
+    "2001:db8:85a3::8a2e:370:7334", 12344,
+    false, false,
+  },
   { AF_INET6, net::AT_INET6, "2001:db8:85a3::8a2e:370:7334",
-    "2001:db8:85a3::8a2e:370:7334", 12345, },
-  { AF_INET6, net::AT_INET6, "0:0:0:0:0:0:0:1", "::1", 12345, },
-  { AF_INET6, net::AT_INET6, "::1", "::1", 12345, },
-  { AF_INET6, net::AT_INET6, "0:0:0:0:0:0:0:0", "::", 12345, },
-  { AF_INET6, net::AT_INET6, "::", "::", 12345, },
-  { AF_UNIX,  net::AT_LOCAL, "/foo/bar", "/foo/bar", 0 },
-  { AF_UNIX,  net::AT_LOCAL, "something else", "something else", 0 },
-  { AF_UNIX,  net::AT_LOCAL, std::string{"\0abstract", 9}, std::string{"\0abstract", 9}, 0 },
-  { AF_UNSPEC,  net::AT_UNSPEC, "", "", 0 },
+    "2001:db8:85a3::8a2e:370:7334", 12345,
+    false, false,
+  },
+  { AF_INET6, net::AT_INET6, "0:0:0:0:0:0:0:1", "::1", 12345,
+    false, true,
+  },
+  { AF_INET6, net::AT_INET6, "::1", "::1", 12345,
+    false, true,
+  },
+  { AF_INET6, net::AT_INET6, "0:0:0:0:0:0:0:0", "::", 12345,
+    true, false,
+  },
+  { AF_INET6, net::AT_INET6, "::", "::", 12345,
+    true, false,
+  },
+  { AF_INET, net::AT_INET4, "0.0.0.0", "0.0.0.0", 12345,
+    true, false,
+  },
+  { AF_INET, net::AT_INET4, "127.0.0.1", "127.0.0.1", 12345,
+    false, true,
+  },
+  { AF_UNIX,  net::AT_LOCAL, "/foo/bar", "/foo/bar", 0,
+    false, false,
+  },
+  { AF_UNIX,  net::AT_LOCAL, "something else", "something else", 0,
+    false, false,
+  },
+  { AF_UNIX,  net::AT_LOCAL, std::string{"\0abstract", 9}, std::string{"\0abstract", 9}, 0,
+    false, false,
+  },
+  { AF_UNSPEC,  net::AT_UNSPEC, "", "", 0,
+    false, false,
+  },
 };
 
 
@@ -220,7 +256,8 @@ TEST_P(SocketAddressParsing, string_construction_without_port)
   std::string s2 = full_expected(td, 0); // No port in ctor
   ASSERT_EQ(s2, s.str());
 
-  // Let's also test the verify_netmask() function.
+  // Let's also test the verify_netmask() function, as well as the feature
+  // tests.
   if (AT_INET4 == td.sa_type || AT_INET6 == td.sa_type) {
     size_t max = AF_INET == td.type ? 32 : 128;
     for (size_t j = 0 ; j <= max ; ++j) {
@@ -230,6 +267,10 @@ TEST_P(SocketAddressParsing, string_construction_without_port)
     // +1 can't work.
     ++max;
     ASSERT_FALSE(address.verify_netmask(max));
+
+    // Feature tests
+    ASSERT_EQ(td.is_any, address.is_any());
+    ASSERT_EQ(td.is_loopback, address.is_loopback());
   }
 }
 
@@ -268,6 +309,7 @@ TEST_P(SocketAddressParsing, string_construction_with_port)
   }
 }
 
+
 INSTANTIATE_TEST_SUITE_P(net, SocketAddressParsing,
     testing::ValuesIn(parsing_tests),
     generate_name_parsing);
@@ -291,6 +333,10 @@ TEST(SocketAddressParsing, unique_hashes)
   // Each unique full string must have a unique hash
   ASSERT_EQ(canonical.size(), hashes.size());
 }
+
+
+
+
 
 /*****************************************************************************
  * SocketAddressAsValues
