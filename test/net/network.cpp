@@ -145,6 +145,9 @@ TEST_P(NetworkConstruction, reconstruct)
   network n2{spec}; // Should not throw, because the netspec above worked.
 
   ASSERT_EQ(n, n2);
+
+  network n3{n2};
+  ASSERT_EQ(n, n3);
 }
 
 INSTANTIATE_TEST_SUITE_P(net, NetworkConstruction,

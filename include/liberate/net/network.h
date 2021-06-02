@@ -66,6 +66,14 @@ public:
   explicit network(std::string const & netspec);
   virtual ~network();
 
+  /**
+   * The copy constructor creates a *new* network with none of the state used
+   * to manage reserved addresses. It is functionally equivalent to writing
+   *   network n1{spec};
+   *   network n2{n1.netspec()};
+   */
+  network(network const & other);
+
 
   /**
    * Throws away all state in the network class and reinitializes it with the

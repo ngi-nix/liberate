@@ -151,6 +151,13 @@ network::network(std::string const & netspec)
 
 
 
+network::network(network const & other)
+  : m_impl{std::make_unique<network_impl>(other.netspec())}
+{
+}
+
+
+
 network::~network()
 {
 }
