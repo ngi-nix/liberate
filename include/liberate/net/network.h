@@ -134,6 +134,15 @@ public:
   socket_address reserve_address();
 
   /**
+   * Return a socket address for an identifier. Note that this does *not*
+   * reserve this address, it just performs the mapping. Use reserve_address()
+   * to actually reserve the address, or is_reserved() to query whether it is
+   * already reserved.
+   */
+  socket_address mapped_address(std::string const & identifier) const;
+  socket_address mapped_address(void const * identifier, size_t const & length);
+
+  /**
    * Returns a new socket_address (with port set to 0) that is part of this
    * network, or nullptr if there are no available addresses.
    *

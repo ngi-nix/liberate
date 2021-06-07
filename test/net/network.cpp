@@ -308,11 +308,13 @@ TEST(Network, ipv4_allocation_with_id)
   // Let's allocate one first, and test that releasing and re-allocating
   // works (i.e. same ID gets same address).
   std::string id1 = "foobar";
+  auto tmp = net.mapped_address(id1);
   socket_address address;
   ASSERT_NO_THROW(address = net.reserve_address(id1));
   ASSERT_TRUE(net.in_network(address));
   ASSERT_TRUE(net.is_reserved(address));
   ASSERT_TRUE(net.is_reserved(id1));
+  ASSERT_EQ(tmp, address);
 
   // Let's ensure first that using the same ID again will result in an
   // error result as it's already allocated.
@@ -335,12 +337,14 @@ TEST(Network, ipv4_allocation_with_id)
   std::string id2 = "foobaz";
   ASSERT_NE(id1, id2);
 
+  tmp = net.mapped_address(id2);
   socket_address address3;
   ASSERT_NO_THROW(address3 = net.reserve_address(id2));
   ASSERT_TRUE(net.in_network(address3));
 
   ASSERT_TRUE(net.is_reserved(address3));
   ASSERT_TRUE(net.is_reserved(id2));
+  ASSERT_EQ(tmp, address3);
 
   ASSERT_NE(address2, address3);
 }
