@@ -237,6 +237,7 @@ TEST(Network, reset)
   ASSERT_FALSE(net.in_network(address));
   ASSERT_NO_THROW(address = net.reserve_address());
   ASSERT_TRUE(net.in_network(address));
+  ASSERT_TRUE(net.is_reserved(address));
 
   // Now reset the network to a new range. The address can't be in_networK()
   // any longer.
@@ -246,6 +247,7 @@ TEST(Network, reset)
   // Reserve a new address and things should be fine again.
   ASSERT_NO_THROW(address = net.reserve_address());
   ASSERT_TRUE(net.in_network(address));
+  ASSERT_TRUE(net.is_reserved(address));
 }
 
 
@@ -263,6 +265,7 @@ TEST(Network, ipv4_allocation)
   for (size_t i = 0 ; i < 14 ; ++i) {
     socket_address addr;
     ASSERT_NO_THROW(addr = n.reserve_address());
+    ASSERT_TRUE(n.is_reserved(addr));
 
     for (size_t j = 0 ; j < known.size() ; ++j) {
       socket_address & k = *(known[j].get());
@@ -277,6 +280,7 @@ TEST(Network, ipv4_allocation)
   EXPECT_TRUE(n.release_address(socket_address("192.168.1.7")));
   socket_address addr;
   ASSERT_NO_THROW(addr = n.reserve_address());
+  ASSERT_TRUE(n.is_reserved(addr));
   ASSERT_EQ(socket_address("192.168.1.7"), addr);
 
   // Erasing an unknown address should fail
@@ -287,6 +291,7 @@ TEST(Network, ipv4_allocation)
   for (auto iter = known.begin() ; iter != end ; ++iter) {
     EXPECT_TRUE(*iter);
     ASSERT_TRUE(n.release_address(*iter->get()));
+    ASSERT_FALSE(n.is_reserved(*iter->get()));
   }
 }
 
@@ -306,6 +311,8 @@ TEST(Network, ipv4_allocation_with_id)
   socket_address address;
   ASSERT_NO_THROW(address = net.reserve_address(id1));
   ASSERT_TRUE(net.in_network(address));
+  ASSERT_TRUE(net.is_reserved(address));
+  ASSERT_TRUE(net.is_reserved(id1));
 
   // Let's ensure first that using the same ID again will result in an
   // error result as it's already allocated.
@@ -314,9 +321,15 @@ TEST(Network, ipv4_allocation_with_id)
 
   // However, releasing the address means we can get it again.
   net.release_address(address);
+  ASSERT_FALSE(net.is_reserved(address));
+  ASSERT_FALSE(net.is_reserved(id1));
+
   ASSERT_NO_THROW(address2 = net.reserve_address(id1));
   ASSERT_TRUE(net.in_network(address2));
   ASSERT_EQ(address, address2);
+
+  ASSERT_TRUE(net.is_reserved(address));
+  ASSERT_TRUE(net.is_reserved(id1));
 
   // Right, now verify that another ID does not produce a collision.
   std::string id2 = "foobaz";
@@ -325,6 +338,9 @@ TEST(Network, ipv4_allocation_with_id)
   socket_address address3;
   ASSERT_NO_THROW(address3 = net.reserve_address(id2));
   ASSERT_TRUE(net.in_network(address3));
+
+  ASSERT_TRUE(net.is_reserved(address3));
+  ASSERT_TRUE(net.is_reserved(id2));
 
   ASSERT_NE(address2, address3);
 }
@@ -340,6 +356,7 @@ TEST(Network, direct_allocation)
 
   // Try to allocate a socket_address directly.
   ASSERT_TRUE(net.reserve_address(socket_address("192.168.0.1")));
+  ASSERT_TRUE(net.is_reserved(socket_address("192.168.0.1")));
 
   // The same again won't work.
   ASSERT_FALSE(net.reserve_address(socket_address("192.168.0.1")));

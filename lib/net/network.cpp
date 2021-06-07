@@ -387,6 +387,55 @@ network::reserve_address(socket_address const & addr)
 
 
 bool
+network::is_reserved(std::string const & identifier) const
+{
+  // std::cout << "id: " << identifier << std::endl;
+
+  std::hash<std::string> hasher;
+  size_t hash = hasher(identifier);
+  // std::cout << "hash pre: " << hash << std::endl;
+
+  // That the hash is large is great, but we will have less than 32 bits
+  // available for addresses... so truncate this further.
+  hash %= m_impl->get_max();
+  // std::cout << "hash post: " << hash << std::endl;
+
+  // The lowest allowed is the network address plus one.
+  socket_address alloc = network_address();
+  ++alloc;
+
+  // Increment the allocated address as often as the hash value now.
+  for (uint32_t i = 0 ; i < hash ; ++i, ++alloc); //!OCLINT
+
+  return is_reserved(alloc);
+}
+
+
+
+bool
+network::is_reserved(void const * identifier, size_t const & length) const
+{
+  if (nullptr == identifier || 0 == length) {
+    throw std::invalid_argument{"No or zero length identifier "
+        "specified."};
+  }
+
+  return is_reserved(std::string(static_cast<char const *>(identifier),
+        length));
+}
+
+
+
+bool
+network::is_reserved(socket_address const & addr) const
+{
+  auto iter = m_impl->m_allocated.find(addr);
+  return (m_impl->m_allocated.end() != iter);
+}
+
+
+
+bool
 network::release_address(socket_address const & addr)
 {
   auto iter = m_impl->m_allocated.find(addr);

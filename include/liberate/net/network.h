@@ -159,6 +159,14 @@ public:
    **/
   bool release_address(socket_address const & addr);
 
+  /**
+   * Return true if an address is reserved already with the given identifier,
+   * false otherwise.
+   */
+  bool is_reserved(std::string const & identifier) const;
+  bool is_reserved(void const * identifier, size_t const & length) const;
+  bool is_reserved(socket_address const & addr) const;
+
 protected:
   /**
    * Used by cpp::comparison_operators
