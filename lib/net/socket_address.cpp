@@ -581,7 +581,11 @@ socket_address::deserialize(void const * buf, size_t len, bool with_port)
   address_type type = static_cast<address_type>(*ptr);
 
   // Pass the rest of the buffer on to the typed function.
-  return deserialize(type, ptr + 1, len - 1, with_port);
+  auto [size, addr] = deserialize(type, ptr + 1, len - 1, with_port);
+  if (!size) {
+    return std::make_tuple(0, socket_address{});
+  }
+  return std::make_tuple(size + 1, addr);
 }
 
 
