@@ -165,6 +165,7 @@ public:
    **/
   size_t bufsize() const;
 
+
   /**
    * Returns the available size of the raw address buffer.
    **/
@@ -176,6 +177,47 @@ public:
    **/
   void const * buffer() const;
   void * buffer();
+
+
+  /**
+   * Returns the minimum buffer size required to serialize the address with
+   * or without type and port. For IPv4 this is 4 Bytes, for example, without a
+   * port or type.
+   * *Note*: This is only defined for IPv4 and IPv6 addresses.
+   */
+  size_t min_bufsize(bool with_type = true, bool with_port = true) const;
+
+
+  /**
+   * Serialize addresses to mininum buffer. Returns the number of bytes
+   * serialized.
+   *
+   * This function is useful for writing to IP headers.
+   *
+   * *Note*: This is only defined for IPv4 and IPv6 addresses.
+   */
+  size_t serialize(void * buf, size_t len, bool with_type = true, bool with_port = true) const;
+
+
+  /**
+   * Reconstruct address from minimal buffer size. If a type is provided in the
+   * call, it is assumed that the buffer does *not* contain a type. Otherwise,
+   * the type is expected in the first Byte. Be aware of this when deserializing
+   * addresses.
+   *
+   * This function is useful for reading from IP headers.
+   *
+   * The first result is the number of Bytes consumed, the second the result. If
+   * the number of Bytes is zero, this indicates an error in parsing.
+   *
+   * *Note*: This is only defined for IPv4 and IPv6 addresses.
+   */
+  static std::tuple<size_t, socket_address>
+  deserialize(void const * buf, size_t len, bool with_port = true);
+
+  static std::tuple<size_t, socket_address>
+  deserialize(address_type type, void const * buf, size_t len,
+      bool with_port = true);
 
 
   /**

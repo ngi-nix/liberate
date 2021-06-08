@@ -188,6 +188,74 @@ net::socket_address create_address(parsing_test_data const & data)
 }
 
 
+inline void
+test_min_serialization(liberate::net::socket_address const & addr, bool with_type, bool with_port)
+{
+  using namespace liberate::net;
+  auto expected = addr;
+  if (!with_port) {
+    expected.set_port(0);
+  }
+
+  // Serialize to minimal buffer
+  auto required = addr.min_bufsize(with_type, with_port);
+  if (!required) {
+    GTEST_SKIP();
+    return;
+  }
+
+  std::vector<char> buf;
+  buf.resize(required);
+
+  // Serialization to a too small buffer must fail.
+  ASSERT_EQ(0, addr.serialize(&buf[0], required - 1, with_type, with_port));
+
+  // Serialization to the full buffer should work, and return the required size.
+  auto consumed = addr.serialize(&buf[0], required, with_type, with_port);
+  ASSERT_EQ(required, consumed);
+
+  // Now deserialize. If we had a type, we can deserialize the whole buffer and
+  // detect the type. In either case, we can specify the type and deserialize
+  // the rest.
+  if (with_type) {
+    // Failure first
+    auto [success, result] = socket_address::deserialize(
+        buf.data(), buf.size() - 1,
+        with_port);
+    ASSERT_FALSE(success);
+    ASSERT_EQ(AT_UNSPEC, result.type());
+
+    // Success
+    std::tie(success, result) = socket_address::deserialize(
+        buf.data(), buf.size(),
+        with_port);
+    ASSERT_TRUE(success);
+    ASSERT_EQ(expected, result);
+
+    // Success with type
+    std::tie(success, result) = socket_address::deserialize(addr.type(),
+        buf.data() + 1, buf.size() - 1,
+        with_port);
+    ASSERT_TRUE(success);
+    ASSERT_EQ(expected, result);
+  }
+  else {
+    // Failure first
+    auto [success, result] = socket_address::deserialize(addr.type(),
+        buf.data(), buf.size() - 1,
+        with_port);
+    ASSERT_FALSE(success);
+    ASSERT_EQ(AT_UNSPEC, result.type());
+
+    // Success - with type
+    std::tie(success, result) = socket_address::deserialize(addr.type(),
+        buf.data(), buf.size(),
+        with_port);
+    ASSERT_TRUE(success);
+    ASSERT_EQ(expected, result);
+  }
+}
+
 } // anonymous namespace
 
 class SocketAddressParsing
@@ -308,6 +376,40 @@ TEST_P(SocketAddressParsing, string_construction_with_port)
     ASSERT_FALSE(address.verify_netmask(max));
   }
 }
+
+
+TEST_P(SocketAddressParsing, serialization)
+{
+  // Tests that the verify_cidr() function works as expected.
+  using namespace net;
+  auto td = GetParam();
+  if (AT_LOCAL == td.sa_type || AT_UNSPEC == td.sa_type) {
+    GTEST_SKIP();
+    return;
+  }
+
+  // First, parse regularly. This is a bit of a cheat in lieu of putting
+  // test data into the array above, but we want to test if we can reconstruct
+  // a socket_address from a buffer.
+  socket_address tmp{td.address, td.port};
+
+  // Reconstructing from the full buffer must produce an equal address.
+  socket_address recon1{tmp.buffer(), tmp.bufsize()};
+  ASSERT_EQ(tmp, recon1);
+
+  // On the other hand, reconstructing from a partial buffer should
+  // fail.
+  socket_address failed{tmp.buffer(), 3};
+  ASSERT_EQ(AT_UNSPEC, failed.type());
+
+  // Serialize to minimum buffer size
+  test_min_serialization(tmp, true, true);
+  test_min_serialization(tmp, true, false);
+  test_min_serialization(tmp, false, true);
+  test_min_serialization(tmp, false, false);
+}
+
+
 
 
 INSTANTIATE_TEST_SUITE_P(net, SocketAddressParsing,

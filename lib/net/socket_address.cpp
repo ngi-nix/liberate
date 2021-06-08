@@ -21,6 +21,7 @@
 #include <build-config.h>
 
 #include <liberate/net/socket_address.h>
+#include <liberate/serialization/integer.h>
 
 #include <cstring>
 #include <sstream>
@@ -83,6 +84,37 @@ parse_address(detail::address_data & data, T const & source, size_t size, uint16
 #endif
 }
 
+
+inline size_t
+calculate_minsize(address_type type, bool with_type, bool with_port)
+{
+  size_t ret = 0;
+
+  switch (type) {
+    case AT_INET4:
+      ret = sizeof(in_addr);
+      break;
+
+    case AT_INET6:
+      ret = sizeof(in6_addr);
+      break;
+
+    default:
+      return 0; // Not valid
+      break;
+  }
+
+  if (with_port) {
+    ret += sizeof(uint16_t);
+  }
+  if (with_type) {
+    ret += 1;
+  }
+
+  return ret;
+}
+
+
 } // anonymous namespace
 
 /*****************************************************************************
@@ -105,6 +137,14 @@ socket_address::socket_address(void const * buf, size_t len)
 
   if (nullptr != buf) {
     ::memcpy(&data.sa_storage, buf, copy_len);
+
+    // Now that we have the memory in a struct, we can determine the type. If
+    // the given buffer is too small for the type, we can't have successfully
+    // parsed anything.
+    if (len < bufsize()) {
+      // Zero data again to indicate parse error
+      ::memset(&data.sa_storage, 0, sizeof(data));
+    }
   }
 }
 
@@ -350,6 +390,198 @@ void *
 socket_address::buffer()
 {
   return &(data.sa_storage);
+}
+
+
+
+size_t
+socket_address::min_bufsize(bool with_type, bool with_port) const
+{
+  return calculate_minsize(type(), with_type, with_port);
+}
+
+
+
+size_t
+socket_address::serialize(void * buf, size_t len, bool with_type, bool with_port) const
+{
+  auto remaining = min_bufsize(with_type, with_port);
+  if (!remaining) {
+    return 0;
+  }
+
+  if (len < remaining) {
+    return 0;
+  }
+
+  uint8_t * offset = reinterpret_cast<uint8_t *>(buf);
+
+  // Type first, if required.
+  if (with_type) {
+    uint8_t tmp = type();
+    auto res = liberate::serialization::serialize_int(offset, remaining, tmp);
+    if (res != 1) {
+      return 0;
+    }
+
+    offset += res;
+    remaining -= res;
+  }
+
+  // The main address buffer next. This one is a little complicated as it
+  // depends on the type.
+  switch (data.sa_storage.ss_family) {
+    case AF_INET:
+      {
+        // The address should be in *network* Byte order, so we should just
+        // copy it over.
+        auto res = sizeof(in_addr);
+        if (remaining < res) {
+          return 0;
+        }
+        memcpy(offset, &(data.sa_in.sin_addr), res);
+
+        offset += res;
+        remaining -= res;
+      }
+      break;
+
+    case AF_INET6:
+      {
+        // INET6 should be similar to INET4, except the address
+        // is a Byte array instead of an integer. Doesn't really
+        // make anything much different.
+        auto res = sizeof(in6_addr);
+        if (remaining < res) {
+          return 0;
+        }
+        memcpy(offset, &(data.sa_in6.sin6_addr), res);
+
+        offset += res;
+        remaining -= res;
+      }
+      break;
+
+    default:
+      // Unreachable.
+      break;
+  }
+
+  // Serialize port if necessary. Ports are also in network Byte order
+  if (with_port) {
+    auto tmp = data.sa_storage.ss_family == AF_INET
+      ? &data.sa_in.sin_port
+      : &data.sa_in6.sin6_port;
+
+    auto required = sizeof(*tmp);
+    if (remaining < required) {
+      return 0;
+    }
+
+    memcpy(offset, tmp, required);
+
+    offset += required;
+    remaining -= required;
+  }
+
+  return offset - reinterpret_cast<uint8_t *>(buf);
+}
+
+
+
+std::tuple<size_t, socket_address>
+socket_address::deserialize(address_type type, void const * buf, size_t len,
+    bool with_port)
+{
+  if (type != AT_INET4 && type != AT_INET6) {
+    return std::make_tuple(0, socket_address{});
+  }
+
+  if (!len) {
+    return std::make_tuple(0, socket_address{});
+  }
+
+  auto remaining = calculate_minsize(type, false, with_port);
+  if (remaining > len) {
+    return std::make_tuple(0, socket_address{});
+  }
+
+  auto offset = reinterpret_cast<uint8_t const *>(buf);
+
+  socket_address tmp;
+  switch (type) {
+    case AT_INET4:
+      {
+        tmp.data.sa_storage.ss_family = AF_INET;
+
+        auto res = sizeof(in_addr);
+        if (remaining < res) {
+          return std::make_tuple(0, socket_address{});
+        }
+        memcpy(&(tmp.data.sa_in.sin_addr), offset, res);
+
+        offset += res;
+        remaining -= res;
+      }
+      break;
+
+    case AT_INET6:
+      {
+        tmp.data.sa_storage.ss_family = AF_INET6;
+
+        auto res = sizeof(in6_addr);
+        if (remaining < res) {
+          return std::make_tuple(0, socket_address{});
+        }
+
+        memcpy(&(tmp.data.sa_in6.sin6_addr), offset, res);
+
+        offset += res;
+        remaining -= res;
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  // Deserialize port, if necessary
+  if (with_port) {
+    auto portp = tmp.data.sa_storage.ss_family == AF_INET
+      ? &tmp.data.sa_in.sin_port
+      : &tmp.data.sa_in6.sin6_port;
+
+    auto required = sizeof(*portp);
+    if (remaining < required) {
+      return std::make_tuple(0, socket_address{});
+    }
+
+    memcpy(portp, offset, required);
+
+    offset += required;
+    remaining -= required;
+  }
+
+  return std::make_tuple(
+      offset - reinterpret_cast<uint8_t const *>(buf),
+      tmp);
+}
+
+
+
+std::tuple<size_t, socket_address>
+socket_address::deserialize(void const * buf, size_t len, bool with_port)
+{
+  if (!len) {
+    return std::make_tuple(0, socket_address{});
+  }
+
+  // Deserialize the type.
+  auto ptr = reinterpret_cast<uint8_t const *>(buf);
+  address_type type = static_cast<address_type>(*ptr);
+
+  // Pass the rest of the buffer on to the typed function.
+  return deserialize(type, ptr + 1, len - 1, with_port);
 }
 
 
