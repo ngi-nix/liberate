@@ -234,6 +234,20 @@ network::network_address() const
 
 
 socket_address
+network::gateway_address() const
+{
+  auto net = network_address();
+  auto addr = net;
+  ++addr;
+  if (in_network(addr)) {
+    return addr;
+  }
+  return net;
+}
+
+
+
+socket_address
 network::broadcast_address() const
 {
   socket_address addr(m_impl->m_network);

@@ -115,9 +115,11 @@ public:
 
 
   /**
-   * Return the network and broadcast addresses of this network respectively.
+   * Return the network, default gateway and broadcast addresses of this
+   * network respectively.
    **/
   socket_address network_address() const;
+  socket_address gateway_address() const;
   socket_address broadcast_address() const;
 
   /**
