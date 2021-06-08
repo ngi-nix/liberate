@@ -238,16 +238,25 @@ socket_address::verify_cidr(std::string const & address)
 
 
 
+size_t
+socket_address::max_netmask() const
+{
+  if (AF_INET == data.sa_storage.ss_family) {
+    return 32;
+  }
+  else if (AF_INET6 == data.sa_storage.ss_family) {
+    return 128;
+  }
+  return 0;
+}
+
+
+
+
 bool
 socket_address::verify_netmask(size_t const & netmask) const
 {
-  if (AF_INET == data.sa_storage.ss_family) {
-    return netmask <= 32;
-  }
-  else if (AF_INET6 == data.sa_storage.ss_family) {
-    return netmask <= 128;
-  }
-  return false;
+  return netmask <= max_netmask();
 }
 
 

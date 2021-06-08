@@ -132,6 +132,7 @@ public:
    * and whether the netmask fits that.
    **/
   bool verify_netmask(size_t const & netmask) const;
+  size_t max_netmask() const;
 
 
   /**
