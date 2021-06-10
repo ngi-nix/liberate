@@ -289,7 +289,7 @@ private:
       add_single_group(buf, remaining, offs, to_process);
       add_pad(buf, remaining, GROUP_PAD);
 
-      offset += to_process;
+      offs += to_process;
       rem -= to_process;
     }
   }
@@ -300,7 +300,9 @@ private:
   {
     auto offs = offset;
     auto rem = offset_size;
-    for (size_t i = 0 ; i < COLUMNS_PER_GROUP ; ++i) {
+
+    // First N columns
+    for (size_t i = 0 ; i < COLUMNS_PER_GROUP - 1 ; ++i) {
       size_t to_process = std::min(BYTES_PER_COLUMN, rem);
 
       add_column(buf, remaining, offs, to_process);
@@ -309,6 +311,14 @@ private:
       offs += to_process;
       rem -= to_process;
     }
+
+    // Last column - without trailing pad
+    size_t to_process = std::min(BYTES_PER_COLUMN, rem);
+
+    add_column(buf, remaining, offs, to_process);
+
+    offs += to_process;
+    rem -= to_process;
   }
 
   static inline void add_column(::liberate::types::byte *& buf,
