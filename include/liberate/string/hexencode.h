@@ -385,6 +385,8 @@ using canonical_hexdump = hexdump<4>;
 
 // Another format uses wider columns and the full pointer width, no frame
 // but a replacement character instead.
+// Note that the size of the intptr_t can vary from platform to platform, and
+// so does the output width.
 using wide_hexdump = hexdump<
   sizeof(intptr_t),
   32, 4, 2,

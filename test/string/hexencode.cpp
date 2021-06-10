@@ -36,10 +36,10 @@ static const std::string hd_canonical{
 "00000054"};
 
 static const std::string hd_wide{
-"0000000000000000  48656c6c 6f2c2077 6f726c64 21205468  65207175 69636b20 62726f77 6e20666f  Hello,.world!.The.quick.brown.fo\n"
-"0000000000000020  78206a75 6d706564 206f7665 72207468  65206c61 7a792064 6f672773 20626163  x.jumped.over.the.lazy.dog's.bac\n"
-"0000000000000040  6b20616e 64207361 74206f6e 20612074  61636b2e                             k.and.sat.on.a.tack.\n"
-"0000000000000054"};
+"0000  48656c6c 6f2c2077 6f726c64 21205468  65207175 69636b20 62726f77 6e20666f  Hello,.world!.The.quick.brown.fo\n"
+"0020  78206a75 6d706564 206f7665 72207468  65206c61 7a792064 6f672773 20626163  x.jumped.over.the.lazy.dog's.bac\n"
+"0040  6b20616e 64207361 74206f6e 20612074  61636b2e                             k.and.sat.on.a.tack.\n"
+"0054"};
 
 
 
@@ -149,6 +149,50 @@ TEST(StringHexDump, canonical_string)
 }
 
 
+namespace {
+
+inline std::vector<std::string>
+split(std::string const & input)
+{
+  std::vector<std::string> res;
+
+  std::size_t pos = 0;
+  std::size_t last = 0;
+
+  while ((pos = input.find('\n', last)) != std::string::npos) {
+    res.push_back(input.substr(last, (pos - last)));
+    last = pos + 1;
+  }
+
+  res.push_back(input.substr(last));
+
+  return res;
+}
+
+inline void
+compare_wide_dump(std::string const & expected, std::string const & result)
+{
+  // The offset size is truncated to 16 bit in hd_wide, because we want to make
+  // this test workable for every platform.
+  auto missing_bytes = (sizeof(intptr_t) - 2) * 2;
+
+  // We should have the same number of lines
+  auto split_exp = split(expected);
+  auto split_res = split(result);
+  ASSERT_FALSE(split_exp.empty());
+  ASSERT_EQ(split_exp.size(), split_res.size());
+
+  // So now we can compare line-by-line
+  for (size_t i = 0 ; i < split_exp.size() ; ++i) {
+    ASSERT_EQ(split_exp[i].size() + missing_bytes, split_res[i].size());
+    auto tmp = split_res[i].substr(missing_bytes);
+    ASSERT_EQ(split_exp[i], tmp);
+  }
+}
+
+} // anonymous namespace
+
+
 TEST(StringHexDump, wide_raw)
 {
   std::string test{"Hello, world! The quick brown fox jumped over the lazy dog's back and sat on a tack."};
@@ -156,10 +200,7 @@ TEST(StringHexDump, wide_raw)
   liberate::string::wide_hexdump dumper;
   auto result = dumper(test.c_str(), test.size());
 
-  ASSERT_EQ(result.size(), hd_wide.size());
-  for (size_t i = 0 ; i < result.size() ; ++i) {
-    ASSERT_EQ(hd_wide[i], result[i]);
-  }
+  compare_wide_dump(hd_wide, result);
 }
 
 
@@ -170,8 +211,5 @@ TEST(StringHexDump, wide_string)
   liberate::string::wide_hexdump dumper;
   auto result = dumper(test);
 
-  ASSERT_EQ(result.size(), hd_wide.size());
-  for (size_t i = 0 ; i < result.size() ; ++i) {
-    ASSERT_EQ(hd_wide[i], result[i]);
-  }
+  compare_wide_dump(hd_wide, result);
 }
