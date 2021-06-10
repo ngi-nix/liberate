@@ -35,6 +35,8 @@
 #include <liberate/net/resolve.h>
 #include <liberate/sys/error.h>
 
+#include <liberate/logging.h>
+
 #include "../macros.h"
 
 namespace liberate::net {
@@ -57,7 +59,7 @@ struct addrinfo_holder
 
 
 
-void
+bool
 resolve_internal(std::set<socket_address> & results, int family,
     std::string const & hostname, uint16_t port)
 {
@@ -90,21 +92,19 @@ resolve_internal(std::set<socket_address> & results, int family,
 #  if defined(LIBERATE_WIN32)
     case WSANO_DATA:
 #  endif
-      return;
+      return true;
 
     case EAI_FAMILY:
     case EAI_SOCKTYPE:
     case EAI_BADFLAGS:
-      throw std::invalid_argument(gai_strerror(err));
-
     case EAI_AGAIN:
     case EAI_FAIL:
     case EAI_MEMORY:
-      throw std::runtime_error(gai_strerror(err));
 #  if defined(LIBERATE_HAVE_EAI_SYSTEM)
     case EAI_SYSTEM:
-      throw std::runtime_error(sys::error_message(sys::error_code()));
 #  endif
+      LIBLOG_ERROR(gai_strerror(err));
+      return false;
 
 #  if defined(LIBERATE_WIN32)
     case WSANOTINITIALISED:
@@ -135,6 +135,7 @@ resolve_internal(std::set<socket_address> & results, int family,
 #else
   throw std::domain_error("Not implemented on this platform.");
 #endif
+  return true;
 }
 
 } // anonymous namespace
