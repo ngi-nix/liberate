@@ -36,6 +36,7 @@ if not meson.is_subproject()
     'types' / 'varint.cpp',
     'types' / 'type_traits.cpp',
     'types' / 'byte.cpp',
+    'random' / 'unsafe_bits.cpp',
     'serialization' / 'integer.cpp',
     'serialization' / 'varint.cpp',
     'concurrency' / 'concurrent_queue.cpp',

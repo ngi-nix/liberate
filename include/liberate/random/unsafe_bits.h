@@ -29,6 +29,7 @@
 #include <random>
 #include <chrono>
 #include <limits>
+#include <type_traits>
 
 namespace liberate::random {
 
@@ -42,7 +43,22 @@ template <typename T>
 struct unsafe_bits
 {
   std::default_random_engine generator;
-  std::uniform_int_distribution<T> distribution;
+
+  // For any integer smaller than 2 Bytes in size, we have to produce values
+  // from a 2 Byte type with the same sign. Here, we're selecting the right
+  // type.
+  using generator_type = typename std::conditional<
+    sizeof(T) == 1,
+    // Signed or unsigned 16 bit
+    typename std::conditional<
+      std::is_signed<T>::value,
+      int16_t,
+      uint16_t
+    >::type,
+    // T is fine to use directly
+    T
+  >::type;
+  std::uniform_int_distribution<generator_type> distribution;
 
   inline unsafe_bits()
     : generator{
