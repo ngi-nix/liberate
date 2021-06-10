@@ -27,8 +27,6 @@
 #include <string>
 #include <sstream>
 
-#include <iostream> // FIXME
-
 #include <liberate/types/byte.h>
 #include <liberate/serialization/integer.h>
 
@@ -173,7 +171,7 @@ private:
       ::liberate::types::byte const * input,
       size_t input_size,
       ::liberate::types::byte const * display_base
-    ) const
+    )
   {
     if (!input || !input_size) {
       return {};
