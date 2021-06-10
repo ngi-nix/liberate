@@ -27,6 +27,7 @@
 #include <liberate.h>
 
 #include <cstddef>
+#include <vector>
 
 namespace liberate::types {
 
@@ -35,6 +36,37 @@ using byte = std::byte;
 #else
 using byte = uint8_t;
 #endif // LIBRATE_HAVE_STD_BYTE
+
+namespace literals {
+
+
+/**
+ * Integer and character literals are converted to bytes. Note that for longer
+ * integer literals, they are truncated by the cast, effectively resulting in
+ * (val % 256).
+ *
+ * String literals are converted to vectors of bytes.
+ */
+inline constexpr byte operator ""_b(unsigned long long arg) noexcept
+{
+  return static_cast<byte>(arg);
+}
+
+
+inline constexpr byte operator ""_b(char arg) noexcept
+{
+  return static_cast<byte>(arg);
+}
+
+
+inline std::vector<byte> operator ""_b(char const * str, std::size_t len) noexcept
+{
+  auto start = reinterpret_cast<byte const *>(str);
+  return {start, start + len};
+}
+
+
+} // namespace literals
 
 } // namespace liberate::types
 
