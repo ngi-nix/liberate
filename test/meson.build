@@ -41,6 +41,7 @@ if not meson.is_subproject()
     'serialization' / 'varint.cpp',
     'concurrency' / 'concurrent_queue.cpp',
     'concurrency' / 'tasklet.cpp',
+    'concurrency' / 'lock_policy.cpp',
     'checksum' / 'crc32.cpp',
     'timeout' / 'exponential_backoff.cpp',
     'runner.cpp',

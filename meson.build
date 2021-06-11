@@ -413,6 +413,7 @@ install_headers(
 install_headers(
   'include' / 'liberate' / 'concurrency' / 'concurrent_queue.h',
   'include' / 'liberate' / 'concurrency' / 'tasklet.h',
+  'include' / 'liberate' / 'concurrency' / 'lock_policy.h',
 
   subdir: 'liberate' / 'concurrency',
 )
