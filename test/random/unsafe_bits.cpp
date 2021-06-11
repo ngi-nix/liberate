@@ -93,6 +93,6 @@ typedef ::testing::Types<
   int8_t,
   intptr_t
 > test_types;
-INSTANTIATE_TYPED_TEST_SUITE_P(types, RandomUnsafeBits, test_types);
+INSTANTIATE_TYPED_TEST_SUITE_P(random, RandomUnsafeBits, test_types);
 
 
