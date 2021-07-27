@@ -42,9 +42,9 @@ inline std::size_t
 backoff_multiplier(std::size_t const & collisions)
 {
   ::liberate::random::unsafe_bits<std::size_t> rng;
-  std::size_t clamp = exp2(collisions) - 1;
+  std::size_t clamp = static_cast<std::size_t>(exp2(collisions)) - 1;
   auto rand = rng.get_factor();
-  auto ret = std::nearbyint(rand * clamp);
+  auto ret = static_cast<std::size_t>(std::nearbyint(rand * clamp));
   return ret;
 }
 
