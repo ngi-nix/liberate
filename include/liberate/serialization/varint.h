@@ -30,6 +30,8 @@
 
 #include <type_traits>
 
+#include <limits>
+
 #include <liberate/types/type_traits.h>
 #include <liberate/types/varint.h>
 
