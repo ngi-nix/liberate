@@ -68,5 +68,7 @@
 
       defaultPackage = forAllSystems (system: self.packages.${system}.liberate);
       devShell = defaultPackage;
+
+      hydraJobs.liberate = self.defaultPackage;
     };
 }
