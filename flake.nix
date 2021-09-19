@@ -49,7 +49,7 @@
           meta = with lib; {
             description = "Interpeer project shared dependency";
             homepage    = "https://interpeer.io/";
-            license     = licenses.unfree;
+            license     = licenses.gpl3Plus;
             platforms   = platforms.all;
           };
         };
